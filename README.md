@@ -212,13 +212,6 @@ Contributions to the Elysian Emporium E-commerce Store! If you'd like to contrib
 
 6.  Open a Pull Request to the main repository, detailing your changes and their purpose.
 
-## License
-
-\[Specify your project's license here, e.g., MIT, Apache 2.0, etc.\]
-
-## Contact
-
-For any inquiries or support, please open an issue in the GitHub repository or contact \[Your Name/Email/Team Contact\].
 
 ---
 
