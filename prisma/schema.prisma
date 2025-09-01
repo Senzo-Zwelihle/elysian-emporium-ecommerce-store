@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -12,4 +6,765 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+// core models
+model User {
+  id            String       @id @default(cuid())
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  phoneNumber   String?      @db.VarChar(20)
+  role          Role         @default(user)
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
+  sessions      Session[]
+  accounts      Account[]
+  members       Member[]
+  invitations   Invitation[]
+
+  // relations
+  membershipId      String?
+  membership        Membership?          @relation(fields: [membershipId], references: [id])
+  membershipHistory MembershipHistory[]
+  points            Int                  @default(0)
+  notifications     Notification[]
+  shipping          Shipping[]
+  reviews           Review[]
+  notes             Note[]
+  tasks             Task[]
+  favorites         Favorite[]
+  orders            Order[]
+  documents         Document[]
+  brands            Brand[]
+  categories        Category[]
+  collections       Collection[]
+  billboards        Billboard[]
+  warehouses        Warehouse[]
+  products          Product[]
+  events            Event[]
+  interactions      ProductInteraction[]
+  experience        Experience[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([email])
+  @@map("user")
+}
+
+model Session {
+  id                   String   @id @default(cuid())
+  expiresAt            DateTime
+  token                String
+  ipAddress            String?
+  userAgent            String?
+  userId               String
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy       String?
+  activeOrganizationId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("verification")
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  name        String
+  slug        String?
+  logo        String?
+  metadata    String?
+  members     Member[]
+  invitations Invitation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  expiresAt DateTime
+
+  @@map("invitation")
+}
+
+model Notification {
+  id                String           @id @default(cuid())
+  user              User             @relation(fields: [userId], references: [id])
+  userId            String
+  message           String
+  image             String?
+  images            String[]
+  type              NotificationType
+  relatedEntityId   String?
+  relatedEntityType String?
+  read              Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notification")
+}
+
+model Note {
+  id        String     @id @default(cuid())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    String
+  title     String
+  content   String
+  tag       NoteTag
+  status    NoteStatus
+  action    NoteAction
+  published Boolean    @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("note")
+}
+
+model Task {
+  id       String       @id @default(cuid())
+  user     User         @relation(fields: [userId], references: [id])
+  userId   String
+  title    String
+  status   TaskStatus   @default(todo)
+  label    String
+  priority TaskPriority @default(low)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("task")
+}
+
+model Document {
+  id           String       @id @default(cuid())
+  user         User         @relation(fields: [userId], references: [id])
+  userId       String
+  name         String
+  documentType DocumentType 
+  status       Status
+  file         String
+  starred      Boolean      @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("document")
+}
+
+model Brand {
+  id         String      @id @default(cuid())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     String
+  name       String      @unique
+  logo       String
+  active     Boolean     @default(false)
+  products   Product[]
+  promotions Promotion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("brand")
+}
+
+model Category {
+  id          String       @id @default(cuid())
+  user        User         @relation(fields: [userId], references: [id])
+  userId      String
+  name        String       @unique
+  active      Boolean      @default(false)
+  products    Product[]
+  collections Collection[]
+  billboards  Billboard[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("category")
+}
+
+model Billboard {
+  id                  String   @id @default(cuid())
+  user                User     @relation(fields: [userId], references: [id])
+  userId              String
+  category            Category @relation(fields: [categoryId], references: [id])
+  categoryId          String
+  label               String
+  description         String
+  image               String
+  status              Status   @default(active)
+
+  featuredProductId   String?  @map("featured_product_id")
+  featuredProduct     Product? @relation(name: "FeaturedProduct", fields: [featuredProductId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("billboard")
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  label       String
+  description String?
+  color       String?
+  image       String
+  status      Status   @default(active)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("collection")
+}
+
+model Warehouse {
+  id       String    @id @default(cuid())
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+  name     String
+  location String
+  status   Status    @default(active)
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("warehouse")
+}
+
+model Product {
+  id                  String               @id @default(cuid())
+  user                User                 @relation(fields: [userId], references: [id])
+  userId              String
+  warehouse           Warehouse            @relation(fields: [warehouseId], references: [id])
+  warehouseId         String
+  brand               Brand                @relation(fields: [brandId], references: [id])
+  brandId             String
+  category            Category             @relation(fields: [categoryId], references: [id])
+  categoryId          String
+  promotion           Promotion?           @relation(fields: [promotionId], references: [id])
+  promotionId         String?
+  name                String
+  slug                String               @unique
+  sku                 String
+  price               Decimal              @db.Decimal(10, 2)
+  stock               Int
+  productVariant      String?
+  productVariantValue String?
+  description         String
+  features            String
+  specifications      String?
+  content             String?
+  images              String[]
+  tag                 ProductTag
+  status              ProductStatus
+  swatch              ProductSwatch[]
+  favorites           Favorite[]
+  reviews             Review[]
+  orderItems          OrderItem[]
+  interactions        ProductInteraction[]
+  featuredInBillboard Billboard[]          @relation("FeaturedProduct")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("product")
+}
+
+model ProductInteraction {
+  id        String                 @id @default(cuid())
+  user      User                   @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product                @relation(fields: [productId], references: [id])
+  productId String
+  type      ProductInteractionType
+  timestamp DateTime               @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("interaction")
+}
+
+model ProductSwatch {
+  id        String            @id @default(cuid())
+  product   Product           @relation(fields: [productId], references: [id])
+  productId String
+  type      ProductSwatchType
+  name      String
+  // e.g., "Red", "16-inch", etc.
+  value     String
+  // swatch-specific images this can be colors sizes etc.....
+  images    String[]
+  status    ProductStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("swatch")
+}
+
+// this is for a singular brand eg all new HP latops with next gen cpu's and soforth it could be anything
+model Promotion {
+  id          String          @id @default(cuid())
+  brand       Brand           @relation(fields: [brandId], references: [id])
+  brandId     String
+  label       String
+  description String
+  image       String
+  active      Boolean         @default(true)
+
+  products    Product[]
+  tags        PromotionTag[]  @relation("tags")
+
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("promotion")
+}
+
+model PromotionTag {
+  id          String       @id @default(cuid())
+  label       String       @unique
+  description String
+
+  promotions  Promotion[]  @relation("tags")
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@map("promotion_tag")
+}
+
+
+
+model Event {
+  id          String     @id @default(cuid())
+  user        User       @relation(fields: [userId], references: [id])
+  userId      String
+  title       String
+  description String?
+  start       DateTime
+  end         DateTime
+  allDay      Boolean    @default(false)
+  color       EventColor @default(sky)
+  location    String?
+  contact     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("event")
+}
+
+model Membership {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  benefits    String[]
+  popular     Boolean  @default(false)
+  minPoints   Int
+  maxPoints   Int
+  crown       String
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("membership")
+}
+
+model MembershipHistory {
+  id     String @id @default(cuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  action String
+  points Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("history")
+}
+
+model Shipping {
+  id             String              @id @default(cuid())
+  user           User                @relation(fields: [userId], references: [id])
+  userId         String
+  label          String
+  type           ShippingAddressType @default(residential)
+  fullName       String
+  phoneNumber    String
+  country        String?
+  city           String
+  suburb         String
+  province       Province
+  streetAddress  String
+  streetAddress2 String?
+  orders         Order[]
+  postalCode     String
+  isDefault      Boolean             @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("shipping")
+}
+
+model Review {
+  id        String       @id @default(cuid())
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product      @relation(fields: [productId], references: [id])
+  productId String
+  rating    Int          @default(5)
+  comment   String
+  status    ReviewStatus @default(pending)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, userId])
+  @@index([userId])
+  @@index([productId])
+  @@map("review")
+}
+
+model Favorite {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  name      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("favorite")
+}
+
+model Order {
+  id                   String        @id @default(cuid())
+  user                 User          @relation(fields: [userId], references: [id])
+  userId               String
+  shipping             Shipping      @relation(fields: [shippingId], references: [id])
+  shippingId           String
+  orderNumber          String        @unique @default(cuid())
+  items                OrderItem[]
+  totalAmount          Decimal       @db.Decimal(10, 2)
+  shippingCost         Decimal       @default(0.00) @db.Decimal(10, 2)
+  vatAmount            Decimal       @default(0.00) @db.Decimal(10, 2)
+  status               OrderStatus   @default(pending)
+  paymentMethod        PaymentMethod @default(mastercard)
+  paymentStatus        PaymentStatus @default(pending)
+  transactionId        String?
+  paymentGatewayId     String?
+  customerNotes        String?
+  cancellationReason   String?
+  expectedDeliveryDate DateTime?
+  actualDeliveryDate   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("order")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("item")
+}
+
+model Experience {
+  id      String  @id @default(cuid())
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String
+  rating  Int     @default(5)
+  comment String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("experience")
+}
+
+// enum types
+enum Role {
+  guest
+  user
+  administrator
+  owner
+  member
+}
+
+enum ShippingAddressType {
+  residential
+  business
+}
+
+enum NotificationType {
+  information
+  warning
+  error
+  success
+  reminder
+  alert
+  message
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+}
+
+enum TaskStatus {
+  todo
+  inprogress
+  blocked
+  review
+  complete
+  cancelled
+  deferred
+}
+
+enum NoteTag {
+  idea
+  todo
+  inspiration
+  reminder
+  task
+  note
+  journal
+  thought
+}
+
+enum NoteStatus {
+  draft
+  inprogess
+  review
+  final
+  archived
+}
+
+enum NoteAction {
+  low
+  urgent
+  important
+  flagged
+}
+
+enum ReviewStatus {
+  pending
+  approved
+  rejected
+  flagged
+  archived
+}
+
+enum Province {
+  easterncape
+  freestate
+  gauteng
+  kwazulunatal
+  limpopo
+  mpumalanga
+  northerncape
+  northwest
+  westerncape
+}
+
+enum PaymentMethod {
+  cashondelivery
+  mastercard
+  mobicred
+  ozow
+  payfast
+  payflex
+  paypal
+  snapscan
+  other
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  processing
+  packed
+  shipped
+  outfordelivery
+  delivered
+  cancelled
+  returned
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+  partiallyrefunded
+  authorized
+}
+
+enum Status {
+  active
+  inactive
+  draft
+  archived
+}
+
+enum ProductStatus {
+  active
+  inactive
+  archived
+  comingsoon
+  preorder
+  limitedstock
+  outofstock
+}
+
+enum ProductTag {
+  new
+  bestseller
+  featured
+  limitedEdition
+  exclusive
+  clearance
+  backinstock
+  preorder
+}
+
+enum ProductInteractionType {
+  view
+  addtocart
+  removefromcart
+  favorite
+  share
+  purchase
+  review
+}
+
+enum ProductSwatchType {
+  color
+  size
+  storage
+  material
+  style
+  screensize
+  finish
+  pattern
+  edition
+  weight
+  capacity
+  speed
+  flavor
+  length
+  height
+  width
+  diameter
+  voltage
+  power
+  bundle
+}
+
+enum DocumentType {
+  pdf
+  file
+  tutorial
+  artical
+  guide
+  invoices
+  other
+}
+
+enum EventColor {
+  sky
+  amber
+  orange
+  emerald
+  violet
+  rose
 }
