@@ -18,7 +18,14 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+       "lib/generated/**",
+        "hooks/usePreventScroll.tsx",
     ],
+  },
+  {
+    rules: {
+      "react/no-unescaped-entities": "off",
+    },
   },
 ];
 

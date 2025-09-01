@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ReactLenis } from "@/components/providers/lenis-provider";
 import { NextThemeProvider } from "@/components/providers/next-themes-provider";
 import { EdgeStoreProvider } from "@/components/providers/edgestore-provider";
+import { NotificationProvider } from "@/components/providers/notification-provider";
 
 export const metadata: Metadata = {
   title: "Elysian Emporium Ecommerce",
@@ -77,11 +78,13 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <NextSSRPlugin
-                routerConfig={extractRouterConfig(ourFileRouter)}
-              />
-              <Toaster theme="system" />
-              {children}
+              <NotificationProvider>
+                <NextSSRPlugin
+                  routerConfig={extractRouterConfig(ourFileRouter)}
+                />
+                <Toaster theme="system" />
+                {children}
+              </NotificationProvider>
             </NextThemeProvider>
           </EdgeStoreProvider>
         </body>

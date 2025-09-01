@@ -12,9 +12,9 @@ const headingVariants = cva("", {
     size: {
       xs: "text-xs md:text-xl",
       sm: "text-2xl md:text-3xl",
-      md: "text-3xl md:text-5xl",
-      lg: "text-5xl md:text-7xl",
-      xl: "text-6xl md:text-8xl",
+      md: "text-3xl md:text-6xl",
+      lg: "text-6xl md:text-7xl",
+      xl: "text-7xl md:text-8xl",
     },
     spacing: {
       tighter: "tracking-tighter",
