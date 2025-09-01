@@ -21,6 +21,7 @@ const eslintConfig = [
       "lib/generated/**",
       "components/motion-primitives/**",
       "hooks/usePreventScroll.tsx",
+      "components/event-calendar/**"
     ],
   },
   {
