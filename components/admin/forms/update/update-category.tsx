@@ -25,8 +25,8 @@ import { Spinner } from "@/components/ui/loader";
 
 import { tryCatch } from "@/hooks/use-trycatch";
 
-import { updateCategoryAction } from "@/server/actions/admin/category";
 import { categorySchema, CategorySchemaType } from "@/schemas/admin/category";
+import { updateCategoryAction } from "@/server/actions/admin/category";
 
 export interface UpdateCategoryFormProps {
   category: {

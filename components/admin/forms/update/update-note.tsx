@@ -35,9 +35,9 @@ import { Textarea } from "@/components/ui/textarea";
 
 import { tryCatch } from "@/hooks/use-trycatch";
 
-import { updateNoteAction } from "@/server/actions/admin/note";
 import { noteSchema, NoteSchemaType } from "@/schemas/admin/note";
 import { NoteAction, NoteStatus, NoteTag } from "@/lib/generated/prisma";
+import { updateNoteAction } from "@/server/actions/admin/note";
 
 const BlockNoteEditor = dynamic(
   () => import("@/components/tools/blocknote-editor"),

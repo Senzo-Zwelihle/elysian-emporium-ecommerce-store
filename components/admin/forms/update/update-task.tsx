@@ -30,9 +30,9 @@ import { Spinner } from "@/components/ui/loader";
 
 import { tryCatch } from "@/hooks/use-trycatch";
 
-import { updateTaskAction } from "@/server/actions/admin/task";
 import { taskSchema, TaskSchemaType } from "@/schemas/admin/task";
 import { TaskPriority, TaskStatus } from "@/lib/generated/prisma";
+import { updateTaskAction } from "@/server/actions/admin/task";
 
 export interface UpdateTaskFormProps {
   task: {
