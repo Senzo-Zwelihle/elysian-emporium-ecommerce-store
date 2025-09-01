@@ -53,7 +53,6 @@ const DocumentCard = ({
   starred,
   onToggleStar,
   updatedAt,
-  onDownload,
   user,
 }: DocumentCardProps) => {
   const [isDeleting, setIsDeleting] = useState(false);
