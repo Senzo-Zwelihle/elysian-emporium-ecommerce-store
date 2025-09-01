@@ -55,7 +55,7 @@ const NotificationMenu = () => {
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className="text-muted-foreground relative size-9 rounded-full shadow-none"
+          className="relative size-9 rounded-full shadow-none"
           aria-label="Open notifications"
         >
           <BellIcon aria-hidden="true" className="size-4" />

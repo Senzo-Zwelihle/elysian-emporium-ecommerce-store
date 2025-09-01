@@ -176,8 +176,8 @@ const UpdateWarehouseForm = ({ data }: UpdateWarehouseFormProps) => {
             </>
           ) : (
             <>
-              Update Warehouse
               <SaveAllIcon />
+              Update Warehouse
             </>
           )}
         </Button>
