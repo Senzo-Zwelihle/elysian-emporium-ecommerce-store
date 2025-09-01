@@ -9,10 +9,9 @@ const StoreLayout = ({ children }: { children: React.ReactNode }) => {
       <Navigationbar />
       {children}
       <FooterMenu />
-      <CookieConsent
-        description="We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking 'Accept', you consent to our use of cookies."
-        learnMoreHref="/cookies"
-      />
+
+      {/* this is for ui purposes-- doesnt actually handle cookies, better-auth config is handling this btw */}
+      <CookieConsent description="We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking 'Accept', you consent to our use of cookies." />
     </main>
   );
 };

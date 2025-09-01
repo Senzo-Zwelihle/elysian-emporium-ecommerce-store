@@ -18,8 +18,9 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
-       "lib/generated/**",
-        "hooks/usePreventScroll.tsx",
+      "lib/generated/**",
+      "components/motion-primitives/**",
+      "hooks/usePreventScroll.tsx",
     ],
   },
   {

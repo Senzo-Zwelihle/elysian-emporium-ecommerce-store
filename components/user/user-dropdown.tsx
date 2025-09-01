@@ -4,7 +4,6 @@ import React from "react";
 import {
   BoltIcon,
   BookOpenIcon,
-  ChevronDownIcon,
   Layers2Icon,
   LogOutIcon,
   PinIcon,
