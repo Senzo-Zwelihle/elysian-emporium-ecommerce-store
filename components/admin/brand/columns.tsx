@@ -60,7 +60,7 @@ export const columns: ColumnDef<BrandColumn>[] = [
     ),
     cell: ({ row }) => {
       const id: string = row.getValue("id");
-      const truncatedId = id.slice(0, 8) + "..."; // truncate to 8 characters
+      const truncatedId = id.slice(0, 8) + "...";
       return (
         <span className="font-mono text-sm text-muted-foreground">
           {truncatedId}
