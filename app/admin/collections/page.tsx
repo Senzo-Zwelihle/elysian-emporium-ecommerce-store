@@ -27,7 +27,7 @@ const CollectionsPage = async () => {
       className="my-4 space-y-4"
     >
       {/* header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-5">
         <Heading
           font={"aeonik"}
           size={"md"}

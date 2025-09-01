@@ -19,6 +19,7 @@ import {
 import { DeleteButton } from "@/components/ui/delete";
 
 import { deleteMembershipAction } from "@/server/actions/admin/membership";
+import Image from "next/image";
 
 type Params = Promise<{ membershipId: string }>;
 
@@ -59,9 +60,12 @@ const DeleteMembershipPage = async ({ params }: { params: Params }) => {
         <CardContent className="space-y-4">
           <div className="flex items-center justify-center">
             {membership.crown && (
-              <img
+              <Image
                 src={membership.crown}
                 alt={`${membership.title} crown`}
+                width={16}
+                height={16}
+                unoptimized
                 className="w-16 h-16 object-contain"
               />
             )}

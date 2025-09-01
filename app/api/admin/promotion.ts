@@ -1,32 +1,26 @@
 import "server-only";
 
+
 import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma/client";
-import { CollectionRow } from "@/components/admin/collection/columns";
 
-export async function fetchAllCollections(): Promise<CollectionRow[]> {
+export async function fetchAllPromotions() {
   noStore();
-  const data = await prisma.collection.findMany({
+  const data = await prisma.promotion.findMany({
     select: {
       id: true,
+      brandId: true,
       label: true,
       description: true,
-      color: true,
       image: true,
-      status: true,
+      products: true,
+      tags: true,
       createdAt: true,
       updatedAt: true,
-      category: {
-        select: { name: true },
-      },
-      user: {
-        select: { name: true },
-      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
-
   return data;
 }

@@ -3,7 +3,6 @@ import { unstable_noStore as noStore } from "next/cache";
 
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { DataTable } from "@/components/admin/feedback/data-table";
