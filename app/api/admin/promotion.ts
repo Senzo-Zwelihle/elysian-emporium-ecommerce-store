@@ -15,6 +15,7 @@ export async function fetchAllPromotions() {
       image: true,
       products: true,
       tags: true,
+      
       createdAt: true,
       updatedAt: true,
     },
