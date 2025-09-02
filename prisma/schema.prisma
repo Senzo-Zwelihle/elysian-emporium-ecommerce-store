@@ -570,6 +570,34 @@ model Experience {
   @@map("experience")
 }
 
+model SystemSettings {
+  id                  String  @id @default(cuid())
+  siteName            String  @default("Elysian Emporium")
+  siteDescription     String? @default("A modern ecommerce platform")
+  contactEmail        String  @default("support@elysianemporium.com")
+  maintenanceMessage  String? @default("We are currently performing scheduled maintenance. Please check back soon.")
+  userRegistration    Boolean @default(true)
+  emailNotifications  Boolean @default(true)
+  twoFactorAuth       Boolean @default(false)
+  loginAttemptLimit   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_settings")
+}
+
+model MaintenanceMode {
+  id      String  @id @default(cuid())
+  enabled Boolean @default(false)
+  message String? @default("We are currently performing scheduled maintenance. Please check back soon.")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("maintenance_mode")
+}
+
 // enum types
 enum Role {
   guest
