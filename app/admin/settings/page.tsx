@@ -57,16 +57,9 @@ const AdminSettingsPage = async () => {
       gap={"none"}
       flow={"none"}
       id="admin-settings"
+      className="my-4"
       
     >
-      <div className="mb-6">
-        <Button variant="ghost" asChild className="mb-4">
-          <Link href="/admin">
-            <ChevronLeftIcon className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Link>
-        </Button>
-      </div>
       <div className="space-y-6">
         <div>
           <Heading

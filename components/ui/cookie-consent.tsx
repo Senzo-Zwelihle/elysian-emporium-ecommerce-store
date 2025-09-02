@@ -32,7 +32,7 @@ interface CookieConsentProps extends React.HTMLAttributes<HTMLDivElement> {
         onDeclineCallback = () => {},
         className,
         description = "We use cookies to ensure you get the best experience on our website. For more information on how we use cookies, please see our cookie policy.",
-        learnMoreHref = "#",
+        learnMoreHref = "/cookies",
         ...props
       },
       ref,
@@ -97,7 +97,7 @@ interface CookieConsentProps extends React.HTMLAttributes<HTMLDivElement> {
             <Card className="m-3 shadow-lg">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg">We use cookies</CardTitle>
-                <ElysianLogo className="size-5"/>
+                <ElysianLogo className="size-8 text-primary rounded-sm"/>
               </CardHeader>
               <CardContent className="space-y-2">
                 <CardDescription className="text-sm">

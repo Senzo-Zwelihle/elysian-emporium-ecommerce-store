@@ -30,6 +30,7 @@ const BlockNoteRender = ({ initialContent }: BlockNoteViewerProps) => {
       editable={false} 
       data-theming-css-variables-demo
       data-color-scheme={resolvedTheme}
+      className="[&_.bn-container]:!p-0 [&_.bn-editor]:!p-0"
     />
   );
 };

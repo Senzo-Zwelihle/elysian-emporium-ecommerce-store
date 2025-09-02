@@ -208,36 +208,8 @@ html.lenis body {
 }
 
 /*  blocknote default overrides*/
-/*  Light Mode  */
-.bn-container[data-theming-css-variables-demo][data-color-scheme] {
-  --bn-colors-editor-background: var(--background);
-  --bn-colors-editor-text: var(--foreground);
-
-  --bn-colors-menu-background: var(--popover);
-  --bn-colors-menu-text: var(--popover-foreground);
-
-  --bn-colors-tooltip-background: var(--muted);
-  --bn-colors-tooltip-text: var(--muted-foreground);
-
-  --bn-colors-hovered-background: var(--muted);
-  --bn-colors-hovered-text: var(--foreground);
-
-  --bn-colors-selected-background: var(--primary);
-  --bn-colors-selected-text: var(--primary-foreground);
-
-  --bn-colors-disabled-background: var(--muted);
-  --bn-colors-disabled-text: var(--muted-foreground);
-
-  --bn-colors-border: var(--border);
-  --bn-colors-side-menu: var(--input);
-
-  --bn-border-radius: var(--radius-md);
-  --bn-font-family: var(--font-aeonik);
-}
-
-/*  Dark Mode  */
-.bn-container[data-theming-css-variables-demo][data-color-scheme="dark"] {
-  --bn-colors-editor-background: var(--background);
+.bn-container[data-theming-css-variables-demo] {
+  --bn-colors-editor-background: transparent;
   --bn-colors-editor-text: var(--foreground);
 
   --bn-colors-menu-background: var(--popover);
@@ -265,4 +237,10 @@ html.lenis body {
 .bn-editor,
 .bn-editor * {
   font-family: var(--bn-font-family), sans-serif !important;
+}
+
+.bn-container,
+.bn-editor {
+  padding: 0 !important;
+  background-color: transparent !important;
 }
