@@ -46,7 +46,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 import { UploadDropzone } from "@/utils/upload/uploadthing";
-
 import { tryCatch } from "@/hooks/use-trycatch";
 
 import {
@@ -54,7 +53,6 @@ import {
   PromotionSchemaType,
 } from "@/schemas/admin/promotion";
 import { createPromotionAction } from "@/server/actions/admin/promotion";
-
 
 interface ProductOption {
   id: string;
@@ -77,11 +75,7 @@ interface CreatePromotionFormProps {
   tags: TagsOption[];
 }
 
-const CreatePromotionForm = ({
-  brands,
-  products,
-  tags,
-}: CreatePromotionFormProps) => {
+const CreatePromotionForm = ({ brands, products, tags }: CreatePromotionFormProps) => {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -174,10 +168,7 @@ const CreatePromotionForm = ({
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder="Enter promotion description"
-                  {...field}
-                />
+                <Textarea placeholder="Enter promotion description" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -197,13 +188,12 @@ const CreatePromotionForm = ({
                     <div className="relative w-fit">
                       <Image
                         src={field.value}
-                        alt="billboard image"
+                        alt="promotion image"
                         width={500}
                         height={500}
                         quality={95}
                         className="rounded-md border object-cover"
                         unoptimized
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                       <Button
                         type="button"
@@ -235,39 +225,31 @@ const CreatePromotionForm = ({
           )}
         />
 
-        {/* Product Selection using Tags */}
+        {/* Products */}
         <Controller
           control={form.control}
           name="productIds"
           render={({ field }) => {
-            const selectedProductIds = field.value || [];
-
-            const handleRemove = (productId: string) =>
+            const selected = field.value || [];
+            const handleRemove = (id: string) =>
+              field.onChange(selected.filter((v) => v !== id));
+            const handleSelect = (id: string) =>
               field.onChange(
-                selectedProductIds.filter((id) => id !== productId)
+                selected.includes(id)
+                  ? selected.filter((v) => v !== id)
+                  : [...selected, id]
               );
-
-            const handleSelect = (productId: string) => {
-              if (selectedProductIds.includes(productId)) {
-                handleRemove(productId);
-              } else {
-                field.onChange([...selectedProductIds, productId]);
-              }
-            };
 
             return (
               <FormItem>
                 <FormLabel>Products</FormLabel>
                 <Tags className="max-w-[400px]">
-                  <TagsTrigger placeholder="Select products...">
-                    {selectedProductIds.map((productId) => {
-                      const product = products.find((p) => p.id === productId);
+                  <TagsTrigger>
+                    {selected.map((id) => {
+                      const product = products.find((p) => p.id === id);
                       if (!product) return null;
                       return (
-                        <TagsValue
-                          key={productId}
-                          onRemove={() => handleRemove(productId)}
-                        >
+                        <TagsValue key={id} onRemove={() => handleRemove(id)}>
                           {product.name}
                         </TagsValue>
                       );
@@ -285,11 +267,8 @@ const CreatePromotionForm = ({
                             value={product.id}
                           >
                             {product.name}
-                            {selectedProductIds.includes(product.id) && (
-                              <CheckIcon
-                                className="text-muted-foreground"
-                                size={14}
-                              />
+                            {selected.includes(product.id) && (
+                              <CheckIcon className="text-muted-foreground" size={14} />
                             )}
                           </TagsItem>
                         ))}
@@ -303,7 +282,7 @@ const CreatePromotionForm = ({
           }}
         />
 
-        {/* Tags */}
+        {/* Tags with inline creation */}
         <Controller
           control={form.control}
           name="tags"
@@ -323,17 +302,26 @@ const CreatePromotionForm = ({
                 <FormLabel>Tags</FormLabel>
                 <Tags className="max-w-[400px]">
                   <TagsTrigger>
-                    {selected.map((tagId) => (
-                      <TagsValue
-                        key={tagId}
-                        onRemove={() => handleRemove(tagId)}
-                      >
-                        {tags.find((t) => t.id === tagId)?.label}
+                    {selected.map((tag) => (
+                      <TagsValue key={tag} onRemove={() => handleRemove(tag)}>
+                        {tags.find((t) => t.id === tag)?.label ?? tag}
                       </TagsValue>
                     ))}
                   </TagsTrigger>
                   <TagsContent>
-                    <TagsInput placeholder="Search tag..." />
+                    <TagsInput
+                      placeholder="Search or create tag..."
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                          e.preventDefault();
+                          const newTag = e.currentTarget.value.trim();
+                          if (!selected.includes(newTag)) {
+                            field.onChange([...selected, newTag]);
+                          }
+                          e.currentTarget.value = "";
+                        }
+                      }}
+                    />
                     <TagsList>
                       <TagsEmpty />
                       <TagsGroup>
@@ -345,10 +333,7 @@ const CreatePromotionForm = ({
                           >
                             {tag.label}
                             {selected.includes(tag.id) && (
-                              <CheckIcon
-                                className="text-muted-foreground"
-                                size={14}
-                              />
+                              <CheckIcon className="text-muted-foreground" size={14} />
                             )}
                           </TagsItem>
                         ))}
@@ -369,25 +354,18 @@ const CreatePromotionForm = ({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-sm">Active Promotion</FormLabel>
-
               <div className="flex items-center gap-2">
                 <FormControl>
                   <Switch
                     checked={field.value}
                     onCheckedChange={field.onChange}
-                    onBlur={field.onBlur}
-                    disabled={field.disabled}
-                    name={field.name}
-                    ref={field.ref}
                     aria-label="Toggle Active"
                   />
                 </FormControl>
-
                 <Label htmlFor={field.name} className="text-sm font-medium">
                   {field.value ? "Yes" : "No"}
                 </Label>
               </div>
-
               <FormMessage />
             </FormItem>
           )}

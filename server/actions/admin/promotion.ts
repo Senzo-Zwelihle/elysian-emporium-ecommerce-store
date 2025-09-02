@@ -2,18 +2,19 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma/client";
+
 import { ApiResponse } from "@/types/api/response";
 import { createNotificationAction } from "@/server/actions/notification/notifications";
 import { NotificationType } from "@/lib/generated/prisma";
-
 import {
   promotionSchema,
   PromotionSchemaType,
 } from "@/schemas/admin/promotion";
 
-// CREATE
+// create
 export async function createPromotionAction(
   values: PromotionSchemaType
 ): Promise<ApiResponse> {
@@ -42,10 +43,19 @@ export async function createPromotionAction(
           connect: productIds.map((id) => ({ id })),
         },
         tags: {
-          connectOrCreate: tags.map((tag) => ({
-            where: { label: tag },
-            create: { label: tag, description: tag },
-          })),
+          connectOrCreate: tags.map((tag) => {
+            const isId = tag.length === 25; // cuid length
+            if (isId) {
+              return {
+                where: { id: tag },
+                create: { label: tag, description: tag },
+              };
+            }
+            return {
+              where: { label: tag },
+              create: { label: tag, description: tag },
+            };
+          }),
         },
       },
     });
@@ -73,7 +83,7 @@ export async function createPromotionAction(
   }
 }
 
-// UPDATE
+// update
 export async function updatePromotionAction(
   promotionId: string,
   values: PromotionSchemaType
@@ -106,10 +116,19 @@ export async function updatePromotionAction(
         },
         tags: {
           set: [],
-          connectOrCreate: tags.map((tag) => ({
-            where: { label: tag },
-            create: { label: tag, description: tag },
-          })),
+          connectOrCreate: tags.map((tag) => {
+            const isId = tag.length === 25; 
+            if (isId) {
+              return {
+                where: { id: tag },
+                create: { label: tag, description: tag },
+              };
+            }
+            return {
+              where: { label: tag },
+              create: { label: tag, description: tag },
+            };
+          }),
         },
       },
     });
@@ -134,42 +153,5 @@ export async function updatePromotionAction(
       session.user.id
     );
     return { status: "error", message: "Failed to update promotion" };
-  }
-}
-
-// DELETE
-export async function deletePromotionAction(
-  promotionId: string
-): Promise<ApiResponse> {
-  const session = await auth.api.getSession({ headers: await headers() });
-
-  if (!session) redirect("/sign-in");
-  if (session.user.role !== "administrator") redirect("/unauthorized");
-
-  try {
-    const promotion = await prisma.promotion.delete({
-      where: { id: promotionId },
-    });
-
-    await createNotificationAction(
-      `Deleted promotion "${promotion.label}"`,
-      NotificationType.success,
-      promotion.id,
-      "Promotion",
-      session.user.id
-    );
-
-    return { status: "success", message: "Promotion deleted successfully" };
-  } catch (error) {
-    await createNotificationAction(
-      `Failed to delete promotion. Error: ${
-        error instanceof Error ? error.message : String(error)
-      }`,
-      NotificationType.error,
-      undefined,
-      undefined,
-      session.user.id
-    );
-    return { status: "error", message: "Failed to delete promotion" };
   }
 }

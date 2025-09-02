@@ -7,7 +7,7 @@ export const promotionSchema = z.object({
   image: z.string().min(1, "Promotion image is required"),
   active: z.boolean(),
   productIds: z.array(z.string().min(1)),
-  tags: z.array(z.string().min(1)),
+  tags: z.array(z.string().min(1)), 
 });
 
 export const promotionTagSchema = z.object({
