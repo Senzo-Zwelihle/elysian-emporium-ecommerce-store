@@ -33,6 +33,7 @@ import {
   updateMemberRoleAction,
   removeMemberAction,
 } from "@/server/actions/admin/organization";
+import Image from "next/image";
 
 interface User {
   id: string;
@@ -73,7 +74,7 @@ const ManageMembers = ({
         role: newRole,
       });
       if (result.status === "success") {
-        // You might want to add a toast notification here
+       
         window.location.reload();
       } else {
         // Handle error
@@ -91,7 +92,7 @@ const ManageMembers = ({
     try {
       const result = await removeMemberAction(organizationId, { memberId });
       if (result.status === "success") {
-        // You might want to add a toast notification here
+       
         window.location.reload();
       } else {
         // Handle error
@@ -120,9 +121,11 @@ const ManageMembers = ({
               <TableCell>
                 <div className="flex items-center space-x-3">
                   {member.user.image && (
-                    <img
+                    <Image
                       src={member.user.image}
                       alt={member.user.name}
+                      width={40}
+                      height={40}
                       className="h-8 w-8 rounded-full"
                     />
                   )}

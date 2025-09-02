@@ -28,7 +28,7 @@ import {
 // new
 export async function createOrganizationAction(
   values: OrganizationSchemaType
-): Promise<ApiResponseWithData<any>> {
+): Promise<ApiResponseWithData<{ id: string; name: string }>> {
   // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -73,12 +73,10 @@ export async function createOrganizationAction(
         name: validation.data.name,
         slug: validation.data.slug || undefined,
         logo: validation.data.logo || undefined,
-        createdAt: new Date(),
         members: {
           create: {
             userId: session.user.id,
             role: "owner",
-            createdAt: new Date(),
           },
         },
       },
@@ -240,7 +238,7 @@ export async function deleteOrganizationAction(
 export async function inviteMemberAction(
   organizationId: string,
   values: InviteMemberSchemaType
-): Promise<ApiResponseWithData<any>> {
+): Promise<ApiResponseWithData<{ id: string; email: string }>> {
   // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -345,9 +343,9 @@ export async function inviteMemberAction(
       await createNotificationAction(
         `You have been invited to join ${organization.name}`,
         NotificationType.information,
-        invitedUser.id,
+        invitation.id,
         "Invitation",
-        invitation.id
+        invitedUser.id
       );
     }
 
@@ -368,7 +366,7 @@ export async function inviteMemberAction(
 // Accept invitation
 export async function acceptInvitationAction(
   invitationId: string
-): Promise<ApiResponseWithData<any>> {
+): Promise<ApiResponseWithData<{ id: string; role: string }>> {
   // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -433,7 +431,6 @@ export async function acceptInvitationAction(
         organizationId: invitation.organizationId,
         userId: session.user.id,
         role: invitation.role || "member",
-        createdAt: new Date(),
       },
     });
 
@@ -564,7 +561,7 @@ export async function rejectInvitationAction(
 export async function updateMemberRoleAction(
   organizationId: string,
   values: UpdateMemberRoleSchemaType
-): Promise<ApiResponseWithData<any>> {
+): Promise<ApiResponseWithData<{ id: string; role: string }>> {
   // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -706,8 +703,8 @@ export async function removeMemberAction(
       };
     }
 
-    // Check if user has permission to remove members (must be owner or admin)
-    if (member.role !== "owner" && member.role !== "admin") {
+    // Check if user has permission to remove members (must be owner or administrator)
+    if (member.role !== "owner" && member.role !== "administrator") {
       return {
         status: "error",
         message: "You don't have permission to remove members",
