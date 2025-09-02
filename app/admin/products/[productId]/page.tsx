@@ -9,6 +9,13 @@ import {
   StarIcon,
   TagIcon,
   TrashIcon,
+  Warehouse,
+  Heart,
+  TrendingUp,
+  Award,
+  Eye,
+  ShoppingCart,
+  ShoppingBagIcon,
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma/client";
@@ -26,6 +33,7 @@ import {
   setAverageRating,
   setProductTag,
   setStockStatus,
+  getInteractionStats,
 } from "@/types/admin/product";
 
 
@@ -37,19 +45,21 @@ async function getProductData({ productId }: { productId: string }) {
     select: {
       id: true,
       warehouseId: true,
+      warehouse: true,
       brandId: true,
+      brand: true,
       categoryId: true,
+      category: true,
       promotionId: true,
+      promotion: true,
       name: true,
       slug: true,
       sku: true,
-      brand: true,
       price: true,
       stock: true,
       productVariant: true,
       productVariantValue: true,
       description: true,
-      category: true,
       features: true,
       specifications: true,
       content: true,
@@ -74,6 +84,26 @@ async function getProductData({ productId }: { productId: string }) {
         },
         orderBy: {
           createdAt: "desc",
+        },
+      },
+      favorites: {
+        select: {
+          id: true,
+        },
+      },
+      interactions: {
+        select: {
+          type: true,
+          timestamp: true,
+        },
+        orderBy: {
+          timestamp: "desc",
+        },
+      },
+      featuredInBillboard: {
+        select: {
+          id: true,
+          label: true,
         },
       },
       swatch: {
@@ -115,6 +145,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
     productPost.status
   );
   const productTag = setProductTag(productPost.tag);
+  const interactionStats = getInteractionStats(productPost.interactions || []);
+  const favoritesCount = productPost.favorites?.length || 0;
+  const isFeatured = productPost.featuredInBillboard?.length > 0;
 
   return (
     <Container
@@ -147,259 +180,371 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Product Images */}
           <div className="lg:col-span-1">
-            <ProductImageSwitcher images={productPost.images} />
+            <div className="sticky top-6">
+              <ProductImageSwitcher images={productPost.images} />
+            </div>
           </div>
 
-          {/* Product Information and Swatches (if you include them) */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Basic Info */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="space-y-2">
-                    <CardTitle className="text-2xl">
-                      {productPost.name}
-                    </CardTitle>
-                    <div className="flex items-center gap-4">
-                      {/* status */}
-                      {productStockStatus.label && (
-                        <Badge className={`${productStockStatus.color}`}>
-                          {productStockStatus.label}
-                        </Badge>
-                      )}
-
-                      {/* tag */}
-                      {productTag.label && (
-                        <Badge className={`${productTag.color}`}>
-                          <TagIcon className="h-3 w-3 mr-1" />
-                          {productTag.label}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-3xl font-bold">
-                      {productFormattedPrice}
-                    </div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <PackageIcon className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
+          {/* Product Information */}
+          <div className="lg:col-span-2">
+            {/* Product Header */}
+            <div className="space-y-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div className="space-y-3">
+                  <h1 className="text-3xl font-bold leading-tight">{productPost.name}</h1>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {productStockStatus.label && (
+                      <Badge className={`${productStockStatus.color}`}>
                         {productStockStatus.label}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        Brand
-                      </label>
-                      <p className="text-lg">{productPost.brandId}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        SKU
-                      </label>
-                      <p className="font-mono">{productPost.sku}</p>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        Category
-                      </label>
-                      <p>{productPost.categoryId}</p>
-                    </div>
-                    {productPost.productVariant && (
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">
-                          {productPost.productVariant}
-                        </label>
-                        <p>{productPost.productVariantValue}</p>
-                      </div>
+                      </Badge>
+                    )}
+                    {productTag.label && (
+                      <Badge className={`${productTag.color}`}>
+                        <TagIcon className="h-3 w-3 mr-1" />
+                        {productTag.label}
+                      </Badge>
+                    )}
+                    {productPost.promotion && (
+                      <Badge className="bg-red-600">
+                        <TagIcon className="h-3 w-3 mr-1" />
+                        {productPost.promotion.label}
+                      </Badge>
+                    )}
+                    {isFeatured && (
+                      <Badge className="bg-amber-600">
+                        <Award className="h-3 w-3 mr-1" />
+                        Featured
+                      </Badge>
                     )}
                   </div>
-                  <div className="space-y-4">
+                </div>
+                <div className="text-right">
+                  <div className="text-3xl font-bold text-primary">
+                    {productFormattedPrice}
+                  </div>
+                  <div className="flex items-center justify-end gap-2 mt-1">
+                    <PackageIcon className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      Stock: {productPost.stock}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Product Information Card */}
+            <Card className="mb-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Product Information</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                      Brand
+                    </label>
+                    <p className="text-sm font-medium mt-1">{productPost.brand.name}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                      SKU
+                    </label>
+                    <p className="text-sm font-mono mt-1">{productPost.sku}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                      Category
+                    </label>
+                    <p className="text-sm font-medium mt-1">{productPost.category.name}</p>
+                  </div>
+                  {productPost.productVariant && (
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        Rating
+                      <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                        {productPost.productVariant}
                       </label>
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <StarIcon
-                              key={i}
-                              className={`h-4 w-4 ${
-                                i < Math.floor(averageRating)
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-sm text-muted-foreground">
-                          {averageRating.toFixed(1)} (
-                          {productPost.reviews.length} reviews)
-                        </span>
-                      </div>
+                      <p className="text-sm font-medium mt-1">{productPost.productVariantValue}</p>
                     </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        Created
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                        <p className="text-sm">
-                          {productPost.createdAt.toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium text-muted-foreground">
-                        Last Updated
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-                        <p className="text-sm">
-                          {productPost.updatedAt.toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
+                  )}
+                </div>
+                <div className="pt-2 border-t">
+                  <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    Warehouse
+                  </label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Warehouse className="text-muted-foreground" />
+                    <span className="text-sm font-medium">{productPost.warehouse.name}</span>
+                    <span className="text-xs text-muted-foreground">• {productPost.warehouse.location}</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* swatches */}
+            {/* Product Variants */}
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-2xl">Product Swatches</CardTitle>
-                  <Button asChild>
+                  <CardTitle className="text-lg">Product Variants</CardTitle>
+                  <Button asChild size="sm">
                     <Link href={`/admin/products/${productPost.id}/swatches`}>
-                      Manage Swatches
+                      Manage Variants
                     </Link>
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
                 {productPost.swatch && productPost.swatch.length === 0 ? (
-                  <p className="text-muted-foreground">
-                    No swatches added for this product yet.
-                  </p>
+                  <div className="text-center py-8">
+                    <PackageIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                    <p className="text-muted-foreground mb-2">No variants added yet</p>
+                    <Button asChild size="sm" variant="outline">
+                      <Link href={`/admin/products/${productPost.id}/swatches`}>
+                        Add Variant
+                      </Link>
+                    </Button>
+                  </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {productPost.swatch?.map((swatchItem) => (
                       <Card
                         key={swatchItem.id}
-                        className="p-4 flex flex-col gap-2 relative"
+                        className="relative group hover:shadow-md transition-shadow"
                       >
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-semibold">{swatchItem.name}</h4>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          Value: {swatchItem.value}
-                        </p>
-                        <Badge variant="secondary">{swatchItem.type}</Badge>
-                        {swatchItem.images && swatchItem.images.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {swatchItem.images.map((imgUrl, idx) => (
-                              <Image
-                                key={idx}
-                                src={imgUrl}
-                                alt={`Swatch ${swatchItem.name} Image ${
-                                  idx + 1
-                                }`}
-                                width={60}
-                                height={60}
-                                className="p-1 rounded-md object-cover border"
-                              />
-                            ))}
+                        <CardContent className="p-4">
+                          <div className="space-y-3">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="font-semibold text-sm">{swatchItem.name}</h4>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  {swatchItem.value}
+                                </p>
+                              </div>
+                              <Badge variant="secondary" className="text-xs">
+                                {swatchItem.type}
+                              </Badge>
+                            </div>
+                            {swatchItem.images && swatchItem.images.length > 0 && (
+                              <div className="flex flex-wrap gap-2">
+                                {swatchItem.images.slice(0, 3).map((imgUrl, idx) => (
+                                  <Image
+                                    key={idx}
+                                    src={imgUrl}
+                                    alt={`${swatchItem.name} variant`}
+                                    width={40}
+                                    height={40}
+                                    className="rounded border object-cover"
+                                  />
+                                ))}
+                                {swatchItem.images.length > 3 && (
+                                  <div className="w-10 h-10 rounded border bg-muted flex items-center justify-center text-xs text-muted-foreground">
+                                    +{swatchItem.images.length - 3}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            <div className="flex gap-2">
+                              <Button asChild size="sm" variant="outline" className="flex-1">
+                                <Link href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/update`}>
+                                  <EditIcon className="h-3 w-3 mr-1" />
+                                  Edit
+                                </Link>
+                              </Button>
+                              <Button asChild size="sm" variant="destructive">
+                                <Link href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/delete`}>
+                                  <TrashIcon className="h-3 w-3" />
+                                </Link>
+                              </Button>
+                            </div>
                           </div>
-                        )}
-                        {/* Edit Swatch Button */}
-                        <Button
-                          className="absolute top-2 right-2"
-                          asChild
-                          size={"icon"}
-                        >
-                          <Link
-                            href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/update`}
-                          >
-                            <EditIcon />
-                          </Link>
-                        </Button>
-
-                        <Button
-                          className="absolute top-2 left-2"
-                          asChild
-                          size={"icon"}
-                          variant={"destructive"}
-                        >
-                          <Button asChild variant="destructive" size="icon">
-                            <Link
-                              href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/delete`}
-                            >
-                              <TrashIcon />
-                            </Link>
-                          </Button>
-                        </Button>
+                        </CardContent>
                       </Card>
                     ))}
                   </div>
                 )}
               </CardContent>
             </Card>
-
-            <Card>
-              <CardContent>
-                <Tabs defaultValue="description" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="description">Description</TabsTrigger>
-                    <TabsTrigger value="features">Features</TabsTrigger>
-                    <TabsTrigger value="specifications">Specs</TabsTrigger>
-                    <TabsTrigger value="content">Content</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="description" className="mt-4">
-                    <div className="prose max-w-none">
-                      <BlockNoteRender
-                        initialContent={productPost.content || "No content"}
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="features" className="mt-4">
-                    <div className="space-y-3">
-                      <BlockNoteRender initialContent={productPost.features} />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="specifications" className="mt-4">
-                    <div className="space-y-3">
-                      <BlockNoteRender
-                        initialContent={
-                          productPost.specifications || "No Specifications"
-                        }
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="content" className="mt-4">
-                    <div className="space-y-4">
-                      <BlockNoteRender
-                        initialContent={productPost.content || "No Content"}
-                      />
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
           </div>
+        </div>
+
+        {/* Performance & Reviews - Full Width */}
+        <div className="space-y-6 mt-8">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">Performance & Reviews</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    Rating
+                  </label>
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <StarIcon
+                          key={i}
+                          className={`h-4 w-4 ${
+                            i < Math.floor(averageRating)
+                              ? "fill-yellow-400 text-yellow-400"
+                              : "text-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm font-medium">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ({productPost.reviews.length} reviews)
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    Created
+                  </label>
+                  <p className="text-sm font-medium mt-1">
+                    {productPost.createdAt.toLocaleDateString()}
+                  </p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    Updated
+                  </label>
+                  <p className="text-sm font-medium mt-1">
+                    {productPost.updatedAt.toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+
+          {/* Performance Metrics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Performance Analytics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="text-center p-4 rounded-lg border">
+                  <Eye className="mx-auto mb-2" />
+                  <div className="text-2xl font-bold">{interactionStats.views}</div>
+                  <div className="text-xs font-medium">Views</div>
+                </div>
+                <div className="text-center p-4 rounded-lg border">
+                  <Heart className=" mx-auto mb-2" />
+                  <div className="text-2xl font-bold">{favoritesCount}</div>
+                  <div className="text-xs font-medium">Favorites</div>
+                </div>
+                <div className="text-center p-4 rounded-lg border">
+                  <ShoppingBagIcon className="mx-auto mb-2" />
+                  <div className="text-2xl font-bold">{interactionStats.addToCart}</div>
+                  <div className="text-xs font-medium">Cart Adds</div>
+                </div>
+                <div className="text-center p-4 rounded-lg border">
+                  <TrendingUp className="mx-auto mb-2" />
+                  <div className="text-2xl font-bold">{interactionStats.total}</div>
+                  <div className="text-xs font-medium">Total</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Special Features */}
+          {(isFeatured || productPost.promotion) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {isFeatured && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2">
+                      <Award className="h-5 w-5" />
+                      Featured Product
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-2">
+                      {productPost.featuredInBillboard.map((billboard) => (
+                        <div key={billboard.id} className="flex items-center gap-2 p-2 rounded text-sm">
+                          <Award className="h-4 w-4" />
+                          <span className="font-medium">{billboard.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {productPost.promotion && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2">
+                      <TagIcon className="h-5 w-5" />
+                      Active Promotion
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <h4 className="font-semibold">{productPost.promotion.label}</h4>
+                      <p className="text-sm">{productPost.promotion.description}</p>
+                      <Badge className={productPost.promotion.active ? "bg-green-600" : "bg-gray-600"}>
+                        {productPost.promotion.active ? "Active" : "Inactive"}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Product Content */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Product Details</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="description" className="w-full">
+                <TabsList className="grid w-full grid-cols-4">
+                  <TabsTrigger value="description">Description</TabsTrigger>
+                  <TabsTrigger value="features">Features</TabsTrigger>
+                  <TabsTrigger value="specifications">Specs</TabsTrigger>
+                  <TabsTrigger value="content">Content</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="description" className="mt-6">
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <BlockNoteRender
+                      initialContent={productPost.description || "No description available"}
+                    />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="features" className="mt-6">
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <BlockNoteRender initialContent={productPost.features || "No features listed"} />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="specifications" className="mt-6">
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <BlockNoteRender
+                      initialContent={productPost.specifications || "No specifications available"}
+                    />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="content" className="mt-6">
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <BlockNoteRender
+                      initialContent={productPost.content || "No additional content"}
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </Container>

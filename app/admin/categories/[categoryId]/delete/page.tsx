@@ -18,22 +18,24 @@ import {
 
 import { DeleteButton } from "@/components/ui/delete";
 
-import { deleteWarehouseAction } from "@/server/actions/admin/warehouse";
+import { deleteCategoryAction } from "@/server/actions/admin/category";
 
-type Params = Promise<{ warehouseId: string }>;
+type Params = Promise<{ categoryId: string }>;
 
-const DeleteWarehousePage = async ({ params }: { params: Params }) => {
+const DeleteCategoryPage = async ({ params }: { params: Params }) => {
   noStore();
-  const { warehouseId } = await params;
+  const { categoryId } = await params;
 
-  const warehouse = await prisma.warehouse.findUnique({
-    where: { id: warehouseId },
+  const category = await prisma.category.findUnique({
+    where: { id: categoryId },
     include: {
       products: true,
+      collections: true,
+      billboards: true,
     },
   });
 
-  if (!warehouse) {
+  if (!category) {
     return notFound();
   }
 
@@ -53,33 +55,41 @@ const DeleteWarehousePage = async ({ params }: { params: Params }) => {
           <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete the
-            following warehouse:
+            following category:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2 text-center">
-            <h3 className="text-2xl font-semibold">{warehouse.name}</h3>
-            <p className="text-muted-foreground">{warehouse.description}</p>
+            <h3 className="text-2xl font-semibold">{category.name}</h3>
             <div className="flex justify-center items-center space-x-2 my-2">
-              <span className="font-semibold">{warehouse.products.length}</span>
+              <span className="font-semibold">{category.products.length}</span>
               <span className="text-sm text-muted-foreground">
-                {warehouse.products.length === 1 ? "Product" : "Products"}
+                {category.products.length === 1 ? "Product" : "Products"}
               </span>
             </div>
-            <div className="text-center text-sm font-semibold">
-              Location: {warehouse.location}
+            <div className="flex justify-center items-center space-x-2 my-2">
+              <span className="font-semibold">{category.collections.length}</span>
+              <span className="text-sm text-muted-foreground">
+                {category.collections.length === 1 ? "Collection" : "Collections"}
+              </span>
+            </div>
+            <div className="flex justify-center items-center space-x-2 my-2">
+              <span className="font-semibold">{category.billboards.length}</span>
+              <span className="text-sm text-muted-foreground">
+                {category.billboards.length === 1 ? "Billboard" : "Billboards"}
+              </span>
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4">
           <Button variant="secondary" asChild>
-            <Link href={`/admin/warehouses`}>Cancel</Link>
+            <Link href={`/admin/categories`}>Cancel</Link>
           </Button>
           <form
             action={async () => {
               "use server";
-              await deleteWarehouseAction(warehouseId);
-              redirect("/admin/warehouses");
+              await deleteCategoryAction(categoryId);
+              redirect("/admin/categories");
             }}
           >
             <DeleteButton text="Delete" />
@@ -90,4 +100,4 @@ const DeleteWarehousePage = async ({ params }: { params: Params }) => {
   );
 };
 
-export default DeleteWarehousePage;
+export default DeleteCategoryPage;

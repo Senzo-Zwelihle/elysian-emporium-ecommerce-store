@@ -2,6 +2,7 @@ import React from "react";
 import { notFound, redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
+import Image from "next/image";
 
 import { prisma } from "@/lib/prisma/client";
 
@@ -18,19 +19,22 @@ import {
 
 import { DeleteButton } from "@/components/ui/delete";
 
-import { deleteNoteAction } from "@/server/actions/admin/note";
+import { deleteSwatchAction } from "@/server/actions/admin/swatch";
 
-type Params = Promise<{ noteId: string }>;
+type Params = Promise<{ productId: string; swatchId: string }>;
 
-const DeleteNotePage = async ({ params }: { params: Params }) => {
+const DeleteSwatchPage = async ({ params }: { params: Params }) => {
   noStore();
-  const { noteId } = await params;
+  const { productId, swatchId } = await params;
 
-  const note = await prisma.note.findUnique({
-    where: { id: noteId },
+  const swatch = await prisma.productSwatch.findUnique({
+    where: { id: swatchId },
+    include: {
+      product: true,
+    },
   });
 
-  if (!note) {
+  if (!swatch) {
     return notFound();
   }
 
@@ -50,32 +54,44 @@ const DeleteNotePage = async ({ params }: { params: Params }) => {
           <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete the
-            following note:
+            following swatch:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="flex items-center justify-center">
+            {swatch.images && swatch.images.length > 0 && (
+              <Image
+                src={swatch.images[0]}
+                alt={`${swatch.name} swatch`}
+                width={16}
+                height={16}
+                unoptimized
+                className="w-16 h-16 object-contain"
+              />
+            )}
+          </div>
           <div className="space-y-2 text-center">
-            <h3 className="text-2xl font-semibold">{note.title}</h3>
+            <h3 className="text-2xl font-semibold">{swatch.name}</h3>
             <div className="text-center text-sm font-semibold">
-              Status: {note.status}
+              Type: {swatch.type}
             </div>
             <div className="text-center text-sm">
-              Action: {note.action}
+              Value: {swatch.value}
             </div>
             <div className="text-center text-sm">
-              Tag: {note.tag}
+              Product: {swatch.product.name}
             </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4">
           <Button variant="secondary" asChild>
-            <Link href={`/admin/documents/notes`}>Cancel</Link>
+            <Link href={`/admin/products/${productId}/swatches`}>Cancel</Link>
           </Button>
           <form
             action={async () => {
               "use server";
-              await deleteNoteAction(noteId);
-              redirect("/admin/documents/notes");
+              await deleteSwatchAction(swatchId);
+              redirect(`/admin/products/${productId}/swatches`);
             }}
           >
             <DeleteButton text="Delete" />
@@ -86,4 +102,4 @@ const DeleteNotePage = async ({ params }: { params: Params }) => {
   );
 };
 
-export default DeleteNotePage;
+export default DeleteSwatchPage;

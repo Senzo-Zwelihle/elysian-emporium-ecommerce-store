@@ -199,6 +199,7 @@ const DocumentCard = ({
                 }}
                 disabled={isDeleting}
                 className="text-destructive"
+                variant="destructive"
               >
                 <Trash2Icon className="mr-2 h-4 w-4" />
                 <span>{isDeleting ? "Deleting..." : "Delete"}</span>

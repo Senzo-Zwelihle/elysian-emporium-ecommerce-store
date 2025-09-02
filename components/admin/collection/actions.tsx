@@ -49,6 +49,7 @@ export function CollectionRowActions<TData extends Collection>({
           onClick={() => {
             console.log(`Delete category with ID: ${collectionId}`);
           }}
+          variant="destructive"
         >
           <Link href={`/admin/collections/${collectionId}/delete`}>Delete</Link>
           <Trash2Icon className="text-destructive" />

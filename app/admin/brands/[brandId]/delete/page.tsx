@@ -19,23 +19,23 @@ import {
 
 import { DeleteButton } from "@/components/ui/delete";
 
-import { deleteBillboardAction } from "@/server/actions/admin/billboard";
+import { deleteBrandAction } from "@/server/actions/admin/brand";
 
-type Params = Promise<{ billboardId: string }>;
+type Params = Promise<{ brandId: string }>;
 
-const DeleteBillboardPage = async ({ params }: { params: Params }) => {
+const DeleteBrandPage = async ({ params }: { params: Params }) => {
   noStore();
-  const { billboardId } = await params;
+  const { brandId } = await params;
 
-  const billboard = await prisma.billboard.findUnique({
-    where: { id: billboardId },
+  const brand = await prisma.brand.findUnique({
+    where: { id: brandId },
     include: {
-      category: true,
-      featuredProduct: true,
+      products: true,
+      promotions: true,
     },
   });
 
-  if (!billboard) {
+  if (!brand) {
     return notFound();
   }
 
@@ -55,15 +55,15 @@ const DeleteBillboardPage = async ({ params }: { params: Params }) => {
           <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete the
-            following billboard:
+            following brand:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-center">
-            {billboard.image && (
+            {brand.logo && (
               <Image
-                src={billboard.image}
-                alt={`${billboard.label} billboard`}
+                src={brand.logo}
+                alt={`${brand.name} logo`}
                 width={16}
                 height={16}
                 unoptimized
@@ -72,27 +72,30 @@ const DeleteBillboardPage = async ({ params }: { params: Params }) => {
             )}
           </div>
           <div className="space-y-2 text-center">
-            <h3 className="text-2xl font-semibold">{billboard.label}</h3>
-            <p className="text-muted-foreground">{billboard.description}</p>
-            <div className="text-center text-sm font-semibold">
-              Category: {billboard.category.name}
+            <h3 className="text-2xl font-semibold">{brand.name}</h3>
+            <div className="flex justify-center items-center space-x-2 my-2">
+              <span className="font-semibold">{brand.products.length}</span>
+              <span className="text-sm text-muted-foreground">
+                {brand.products.length === 1 ? "Product" : "Products"}
+              </span>
             </div>
-            {billboard.featuredProduct && (
-              <div className="text-center text-sm">
-                Featured Product: {billboard.featuredProduct.name}
-              </div>
-            )}
+            <div className="flex justify-center items-center space-x-2 my-2">
+              <span className="font-semibold">{brand.promotions.length}</span>
+              <span className="text-sm text-muted-foreground">
+                {brand.promotions.length === 1 ? "Promotion" : "Promotions"}
+              </span>
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4">
           <Button variant="secondary" asChild>
-            <Link href={`/admin/billboards`}>Cancel</Link>
+            <Link href={`/admin/brands`}>Cancel</Link>
           </Button>
           <form
             action={async () => {
               "use server";
-              await deleteBillboardAction(billboardId);
-              redirect("/admin/billboards");
+              await deleteBrandAction(brandId);
+              redirect("/admin/brands");
             }}
           >
             <DeleteButton text="Delete" />
@@ -103,4 +106,4 @@ const DeleteBillboardPage = async ({ params }: { params: Params }) => {
   );
 };
 
-export default DeleteBillboardPage;
+export default DeleteBrandPage;

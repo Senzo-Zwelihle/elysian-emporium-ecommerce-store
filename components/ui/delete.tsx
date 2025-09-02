@@ -25,7 +25,7 @@ export function DeleteButton({ text }: buttonProps) {
           variant={"destructive"}
           effect="expandIcon"
           icon={DeleteIcon}
-          iconPlacement="right"
+          iconPlacement="left"
           
         >
           {text}

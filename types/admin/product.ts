@@ -54,6 +54,9 @@ export type ProductServer = {
   createdAt: Date;
   updatedAt: Date;
   reviews: { rating: number }[];
+  favorites: { id: string }[];
+  interactions: { type: string; timestamp: Date }[];
+  featuredInBillboard: { id: string; label: string }[];
 };
 
 export type Product = {
@@ -85,6 +88,9 @@ export type Product = {
   createdAt: Date;
   updatedAt: Date;
   reviews: { rating: number }[];
+  favorites: { id: string }[];
+  interactions: { type: string; timestamp: Date }[];
+  featuredInBillboard: { id: string; label: string }[];
 };
 
 export function setStockStatus(
@@ -220,6 +226,21 @@ export function serializeProduct(product: ProductServer): Product {
   };
 }
 
+// Helper to get interaction stats
+export function getInteractionStats(interactions: { type: string; timestamp: Date }[]) {
+  const stats = interactions.reduce((acc, interaction) => {
+    acc[interaction.type] = (acc[interaction.type] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+  
+  return {
+    views: stats.view || 0,
+    addToCart: stats.addtocart || 0,
+    purchases: stats.purchase || 0,
+    total: interactions.length
+  };
+}
+
 // Helper function to serialize multiple products
 export function serializeProducts(products: ProductServer[]): Product[] {
   return products.map(serializeProduct);
@@ -248,4 +269,7 @@ export type ProductFilterParams = {
   sortBy?: string;
   tag?: ProductTag;
   brand?: string;
+  warehouse?: string;
+  promotion?: string;
+  featured?: boolean;
 };

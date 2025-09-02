@@ -117,7 +117,7 @@ export async function updatePromotionAction(
         tags: {
           set: [],
           connectOrCreate: tags.map((tag) => {
-            const isId = tag.length === 25; 
+            const isId = tag.length === 25;
             if (isId) {
               return {
                 where: { id: tag },
@@ -156,5 +156,54 @@ export async function updatePromotionAction(
   }
 }
 
-
 // delete
+export async function deletePromotionAction(
+  promotionId: string
+): Promise<ApiResponse> {
+  // user session
+  // admin session check
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    redirect("/sign-in");
+  }
+
+  if (session.user.role !== "administrator") {
+    redirect("/unauthorized");
+  }
+
+  try {
+    // mutation
+    const deletePromotion = await prisma.promotion.delete({
+      where: {
+        id: promotionId,
+      },
+    });
+
+    await createNotificationAction(
+      `Successfully deleted "${deletePromotion.label}" promotion.`,
+      NotificationType.success,
+      deletePromotion.id,
+      "Promotion",
+      session.user.id
+    );
+    return {
+      status: "success",
+      message: "Promotion Deleted Successfully",
+    };
+  } catch (error) {
+    await createNotificationAction(
+      `Failed to delete promotion. Error: ${error instanceof Error ? error.message : String(error)}`,
+      NotificationType.error,
+      undefined,
+      undefined,
+      session.user.id
+    );
+    return {
+      status: "error",
+      message: "Failed to delete promotion",
+    };
+  }
+}

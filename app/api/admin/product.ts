@@ -39,7 +39,27 @@ export async function fetchAllProducts(): Promise<ProductServer[]> {
           rating: true,
         },
       },
-      favorites: true,
+      favorites: {
+        select: {
+          id: true,
+        },
+      },
+      interactions: {
+        select: {
+          type: true,
+          timestamp: true,
+        },
+        orderBy: {
+          timestamp: "desc",
+        },
+        take: 100,
+      },
+      featuredInBillboard: {
+        select: {
+          id: true,
+          label: true,
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",

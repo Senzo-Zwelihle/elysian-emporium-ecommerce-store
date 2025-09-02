@@ -7,6 +7,7 @@ import {
   setAverageRating,
   setProductTag,
   setStockStatus,
+  getInteractionStats,
 } from "@/types/admin/product";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,6 +24,11 @@ import {
   EyeIcon,
   EditIcon,
   TrashIcon,
+  Warehouse,
+  Heart,
+  TrendingUp,
+  Award,
+  Tag,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -42,6 +48,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const productFormattedPrice = formatPrice(product.price);
   const productStockStatus = setStockStatus(product.stock, product.status);
   const productTag = setProductTag(product.tag);
+  const interactionStats = getInteractionStats(product.interactions || []);
+  const favoritesCount = product.favorites?.length || 0;
+  const isFeatured = product.featuredInBillboard?.length > 0;
   return (
     <Card className="group overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
       <CardHeader className="p-0">
@@ -58,21 +67,31 @@ const ProductCard = ({ product }: ProductCardProps) => {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
           {/* Stock status badge */}
-          <div className="absolute top-2 left-2">
+          <div className="absolute top-2 left-2 flex flex-col gap-1">
             {productStockStatus.label && (
               <Badge className={`${productStockStatus.color}`}>
                 {productStockStatus.label}
               </Badge>
             )}
+            {isFeatured && (
+              <Badge className="bg-amber-600">
+                <Award className="mr-1 h-3 w-3" />
+                Featured
+              </Badge>
+            )}
           </div>
 
-         
-
-          {/* Product tag badge */}
-          <div className="absolute bottom-2 left-2">
+          {/* Product tag and promotion badges */}
+          <div className="absolute bottom-2 left-2 flex flex-col gap-1">
             {productTag.label && (
               <Badge className={`${productTag.color}`}>
                 {productTag.label}
+              </Badge>
+            )}
+            {product.promotion && (
+              <Badge className="bg-red-600">
+                <Tag className="mr-1 h-3 w-3" />
+                {product.promotion.label}
               </Badge>
             )}
           </div>
@@ -121,7 +140,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
               <h3 className="font-semibold text-lg leading-tight line-clamp-2">
                 {product.name}
               </h3>
-              <p className="font-semibold text-sm ">Brand: {product.brand.name}</p>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>Brand: {product.brand.name}</span>
+                <span>•</span>
+                <div className="flex items-center gap-1">
+                  <Warehouse className="h-3 w-3" />
+                  {product.warehouse.name}
+                </div>
+              </div>
             </div>
           </div>
 
@@ -169,13 +195,41 @@ const ProductCard = ({ product }: ProductCardProps) => {
               </Badge>
             </div>
           )}
+
+          {/* Interaction stats */}
+          <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <EyeIcon className="h-3 w-3" />
+                {interactionStats.views}
+              </div>
+              <div className="flex items-center gap-1">
+                <Heart className="h-3 w-3" />
+                {favoritesCount}
+              </div>
+              <div className="flex items-center gap-1">
+                <TrendingUp className="h-3 w-3" />
+                {interactionStats.total}
+              </div>
+            </div>
+            <div className="text-xs">
+              {product.warehouse.location}
+            </div>
+          </div>
         </div>
       </CardContent>
 
       <CardFooter className="pt-0">
-        <Button asChild className="w-full">
-          <Link href={`/admin/products/${product.id}`}>View Details</Link>
-        </Button>
+        <div className="flex gap-2 w-full">
+          <Button asChild className="flex-1">
+            <Link href={`/admin/products/${product.id}`}>View Details</Link>
+          </Button>
+          {isFeatured && (
+            <Button variant="outline" size="sm" className="px-2">
+              <Award className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

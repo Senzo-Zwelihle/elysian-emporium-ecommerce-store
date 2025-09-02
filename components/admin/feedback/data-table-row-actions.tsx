@@ -50,7 +50,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuItem>
           <Link href={`/admin/feedback/${type}/${item.id}/update`}>Edit</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem variant="destructive">
           <Link href={`/admin/feedback/${type}/${item.id}/delete`}>Delete</Link>
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>

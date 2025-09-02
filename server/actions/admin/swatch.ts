@@ -11,17 +11,12 @@ import { ApiResponse } from "@/types/api/response";
 import { createNotificationAction } from "@/server/actions/notification/notifications";
 import { NotificationType } from "@/lib/generated/prisma";
 
-import {
-  billboardSchema,
-  BillboardSchemaType,
-} from "@/schemas/admin/billboard";
+import { swatchSchema, SwatchSchemaType } from "@/schemas/admin/swatch";
 
-// new
-
-export async function createBillboardAction(
-  values: BillboardSchemaType
+// create
+export async function createSwatchAction(
+  values: SwatchSchemaType
 ): Promise<ApiResponse> {
-  // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -34,10 +29,8 @@ export async function createBillboardAction(
     redirect("/unauthorized");
   }
 
-  //   mutation
   try {
-    // schema validation
-    const validation = billboardSchema.safeParse(values);
+    const validation = swatchSchema.safeParse(values);
 
     if (!validation.success) {
       return {
@@ -46,30 +39,25 @@ export async function createBillboardAction(
       };
     }
 
-    // mutation
-    const newBillboard = await prisma.billboard.create({
-      data: {
-        ...validation.data,
-        userId: session.user.id,
-      },
+    const newSwatch = await prisma.productSwatch.create({
+      data: validation.data,
     });
 
-    // create notification
     await createNotificationAction(
-      `Successfully created ${newBillboard.label} billboard.`,
+      `Successfully created ${newSwatch.name} swatch.`,
       NotificationType.success,
-      newBillboard.id,
-      "Billboard",
-     
+      newSwatch.id,
+      "Swatch",
       session.user.id
     );
+
     return {
       status: "success",
-      message: "Billboard Created Successfully",
+      message: "Swatch Created Successfully",
     };
   } catch (error) {
     await createNotificationAction(
-      `Failed to add a new billboard. Error: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to create swatch. Error: ${error instanceof Error ? error.message : String(error)}`,
       NotificationType.error,
       undefined,
       undefined,
@@ -77,18 +65,16 @@ export async function createBillboardAction(
     );
     return {
       status: "error",
-      message: "Failed to create billboard",
+      message: "Failed to create swatch please try again.",
     };
   }
 }
 
 // update
-
-export async function updateBillboardAction(
-  data: BillboardSchemaType,
-  billboardId: string
+export async function updateSwatchAction(
+  data: SwatchSchemaType,
+  swatchId: string
 ): Promise<ApiResponse> {
-  // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -102,8 +88,7 @@ export async function updateBillboardAction(
   }
 
   try {
-    // schema validation
-    const result = billboardSchema.safeParse(data);
+    const result = swatchSchema.safeParse(data);
 
     if (!result.success) {
       return {
@@ -112,31 +97,28 @@ export async function updateBillboardAction(
       };
     }
 
-    // mutation
-    const updateBillboard = await prisma.billboard.update({
+    const updateSwatch = await prisma.productSwatch.update({
       where: {
-        id: billboardId,
-        userId: session.user.id,
+        id: swatchId,
       },
-      data: {
-        ...result.data,
-      },
+      data: result.data,
     });
 
     await createNotificationAction(
-      `Successfully updated "${updateBillboard.label}" billboard.`,
+      `Successfully updated "${updateSwatch.name}" swatch.`,
       NotificationType.success,
-      updateBillboard.id,
-      "Billboard",
+      updateSwatch.id,
+      "Swatch",
       session.user.id
     );
+
     return {
       status: "success",
-      message: "Billboard Updated Successfully",
+      message: "Swatch Updated Successfully",
     };
   } catch (error) {
     await createNotificationAction(
-      `Failed to update billboard. Error: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to update swatch. Error: ${error instanceof Error ? error.message : String(error)}`,
       NotificationType.error,
       undefined,
       undefined,
@@ -144,17 +126,15 @@ export async function updateBillboardAction(
     );
     return {
       status: "error",
-      message: "Failed to update billboard",
+      message: "Failed to update swatch, please try again.",
     };
   }
 }
 
 // delete
-export async function deleteBillboardAction(
-  billboardId: string
+export async function deleteSwatchAction(
+  swatchId: string
 ): Promise<ApiResponse> {
-  // user session
-  // admin session check
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -168,28 +148,27 @@ export async function deleteBillboardAction(
   }
 
   try {
-    // mutation
-    const deleteBillboard = await prisma.billboard.delete({
+    const deleteSwatch = await prisma.productSwatch.delete({
       where: {
-        id: billboardId,
-        userId: session.user.id,
+        id: swatchId,
       },
     });
 
     await createNotificationAction(
-      `Successfully deleted "${deleteBillboard.label}" billboard.`,
+      `Successfully deleted "${deleteSwatch.name}" swatch.`,
       NotificationType.success,
-      deleteBillboard.id,
-      "Billboard",
+      deleteSwatch.id,
+      "Swatch",
       session.user.id
     );
+
     return {
       status: "success",
-      message: "Billboard Deleted Successfully",
+      message: "Swatch Deleted Successfully",
     };
   } catch (error) {
     await createNotificationAction(
-      `Failed to delete billboard. Error: ${error instanceof Error ? error.message : String(error)}`,
+      `Failed to delete swatch. Error: ${error instanceof Error ? error.message : String(error)}`,
       NotificationType.error,
       undefined,
       undefined,
@@ -197,7 +176,7 @@ export async function deleteBillboardAction(
     );
     return {
       status: "error",
-      message: "Failed to delete billboard",
+      message: "Failed to delete swatch, please try again.",
     };
   }
 }

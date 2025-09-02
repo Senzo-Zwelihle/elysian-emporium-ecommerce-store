@@ -18,19 +18,19 @@ import {
 
 import { DeleteButton } from "@/components/ui/delete";
 
-import { deleteNoteAction } from "@/server/actions/admin/note";
+import { deleteDocumentAction } from "@/server/actions/admin/document";
 
-type Params = Promise<{ noteId: string }>;
+type Params = Promise<{ documentId: string }>;
 
-const DeleteNotePage = async ({ params }: { params: Params }) => {
+const DeleteDocumentPage = async ({ params }: { params: Params }) => {
   noStore();
-  const { noteId } = await params;
+  const { documentId } = await params;
 
-  const note = await prisma.note.findUnique({
-    where: { id: noteId },
+  const document = await prisma.document.findUnique({
+    where: { id: documentId },
   });
 
-  if (!note) {
+  if (!document) {
     return notFound();
   }
 
@@ -50,32 +50,34 @@ const DeleteNotePage = async ({ params }: { params: Params }) => {
           <CardTitle>Are you absolutely sure?</CardTitle>
           <CardDescription>
             This action cannot be undone. This will permanently delete the
-            following note:
+            following document:
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2 text-center">
-            <h3 className="text-2xl font-semibold">{note.title}</h3>
+            <h3 className="text-2xl font-semibold">{document.name}</h3>
             <div className="text-center text-sm font-semibold">
-              Status: {note.status}
+              Type: {document.documentType}
             </div>
             <div className="text-center text-sm">
-              Action: {note.action}
+              Status: {document.status}
             </div>
-            <div className="text-center text-sm">
-              Tag: {note.tag}
-            </div>
+            {document.starred && (
+              <div className="text-center text-sm text-yellow-600">
+                ⭐ Starred Document
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-4">
           <Button variant="secondary" asChild>
-            <Link href={`/admin/documents/notes`}>Cancel</Link>
+            <Link href={`/admin/documents`}>Cancel</Link>
           </Button>
           <form
             action={async () => {
               "use server";
-              await deleteNoteAction(noteId);
-              redirect("/admin/documents/notes");
+              await deleteDocumentAction(documentId);
+              redirect("/admin/documents");
             }}
           >
             <DeleteButton text="Delete" />
@@ -86,4 +88,4 @@ const DeleteNotePage = async ({ params }: { params: Params }) => {
   );
 };
 
-export default DeleteNotePage;
+export default DeleteDocumentPage;
