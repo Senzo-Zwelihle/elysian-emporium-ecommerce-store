@@ -26,7 +26,7 @@ interface BillboardCarouselProps {
 const BillboardCarousel = ({
   billboards,
   autoPlay = true,
-  autoPlayInterval = 5000,
+  autoPlayInterval = 8000,
 }: BillboardCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
@@ -117,7 +117,7 @@ const BillboardCarousel = ({
       opacity: 0,
       scale: 0.8,
       transition: {
-        duration: 0.4,
+        duration: 0.5,
       },
     },
   };

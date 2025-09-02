@@ -36,7 +36,6 @@ import {
   getInteractionStats,
 } from "@/types/admin/product";
 
-
 async function getProductData({ productId }: { productId: string }) {
   const productPost = await prisma.product.findUnique({
     where: {
@@ -169,7 +168,7 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
             </Link>
           </Button>
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">{productPost.name}</h1>
+            <h1 className="text-2xl font-bold">{productPost.name}</h1>
             <p className="text-muted-foreground">Product Details</p>
           </div>
           <Button asChild>
@@ -194,7 +193,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
             <div className="space-y-4 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div className="space-y-3">
-                  <h1 className="text-3xl font-bold leading-tight">{productPost.name}</h1>
+                  <h1 className="text-3xl font-bold leading-tight">
+                    {productPost.name}
+                  </h1>
                   <div className="flex items-center gap-2 flex-wrap">
                     {productStockStatus.label && (
                       <Badge className={`${productStockStatus.color}`}>
@@ -225,12 +226,6 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                   <div className="text-3xl font-bold text-primary">
                     {productFormattedPrice}
                   </div>
-                  <div className="flex items-center justify-end gap-2 mt-1">
-                    <PackageIcon className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      Stock: {productPost.stock}
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
@@ -243,40 +238,94 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
                       Brand
                     </label>
-                    <p className="text-sm font-medium mt-1">{productPost.brand.name}</p>
+                    <p className="font-medium mt-1">
+                      {productPost.brand.name}
+                    </p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
                       SKU
                     </label>
-                    <p className="text-sm font-mono mt-1">{productPost.sku}</p>
+                    <p className="mt-1">{productPost.sku}</p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
                       Category
                     </label>
-                    <p className="text-sm font-medium mt-1">{productPost.category.name}</p>
+                    <p className="font-medium mt-1">
+                      {productPost.category.name}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                      Status
+                    </label>
+                    <p className=" font-medium mt-1 capitalize">
+                      {productPost.status}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                      Slug
+                    </label>
+                    <p className="mt-1">{productPost.slug}</p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                      Created
+                    </label>
+                    <p className="mt-1">
+                      {productPost.createdAt.toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                      Stock
+                    </label>
+                    <p className="mt-1">{productPost.stock}</p>
                   </div>
                   {productPost.productVariant && (
-                    <div>
-                      <label className="text-xs font-medium text-muted-foreground  tracking-wide">
-                        {productPost.productVariant}
-                      </label>
-                      <p className="text-sm font-medium mt-1">{productPost.productVariantValue}</p>
-                    </div>
+                    <>
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                          {productPost.productVariant}
+                        </label>
+                        <p className="font-medium mt-1">
+                          {productPost.productVariantValue}
+                        </p>
+                      </div>
+                      <div></div>
+                    </>
+                  )}
+                  {productPost.promotion && (
+                    <>
+                      <div>
+                        <label className="text-xs font-medium text-muted-foreground tracking-wide">
+                          Promotion
+                        </label>
+                        <p className="font-medium mt-1">
+                          {productPost.promotion.label}
+                        </p>
+                      </div>
+                      <div></div>
+                    </>
                   )}
                 </div>
                 <div className="pt-2 border-t">
-                  <label className="text-xs font-medium text-muted-foreground  tracking-wide">
+                  <label className="text-xs font-medium text-muted-foreground tracking-wide">
                     Warehouse
                   </label>
                   <div className="flex items-center gap-2 mt-1">
-                    <Warehouse className="text-muted-foreground" />
-                    <span className="text-sm font-medium">{productPost.warehouse.name}</span>
-                    <span className="text-xs text-muted-foreground">• {productPost.warehouse.location}</span>
+                    <Warehouse className="size-4 text-muted-foreground" />
+                    <span className="font-medium">
+                      {productPost.warehouse.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      • {productPost.warehouse.location}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -298,7 +347,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                 {productPost.swatch && productPost.swatch.length === 0 ? (
                   <div className="text-center py-8">
                     <PackageIcon className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
-                    <p className="text-muted-foreground mb-2">No variants added yet</p>
+                    <p className="text-muted-foreground mb-2">
+                      No variants added yet
+                    </p>
                     <Button asChild size="sm" variant="outline">
                       <Link href={`/admin/products/${productPost.id}/swatches`}>
                         Add Variant
@@ -316,7 +367,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                           <div className="space-y-3">
                             <div className="flex items-start justify-between">
                               <div>
-                                <h4 className="font-semibold text-sm">{swatchItem.name}</h4>
+                                <h4 className="font-semibold ">
+                                  {swatchItem.name}
+                                </h4>
                                 <p className="text-xs text-muted-foreground mt-1">
                                   {swatchItem.value}
                                 </p>
@@ -325,34 +378,46 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                                 {swatchItem.type}
                               </Badge>
                             </div>
-                            {swatchItem.images && swatchItem.images.length > 0 && (
-                              <div className="flex flex-wrap gap-2">
-                                {swatchItem.images.slice(0, 3).map((imgUrl, idx) => (
-                                  <Image
-                                    key={idx}
-                                    src={imgUrl}
-                                    alt={`${swatchItem.name} variant`}
-                                    width={40}
-                                    height={40}
-                                    className="rounded border object-cover"
-                                  />
-                                ))}
-                                {swatchItem.images.length > 3 && (
-                                  <div className="w-10 h-10 rounded border bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                                    +{swatchItem.images.length - 3}
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                            {swatchItem.images &&
+                              swatchItem.images.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                  {swatchItem.images
+                                    .slice(0, 3)
+                                    .map((imgUrl, idx) => (
+                                      <Image
+                                        key={idx}
+                                        src={imgUrl}
+                                        alt={`${swatchItem.name} variant`}
+                                        width={40}
+                                        height={40}
+                                        className="rounded border object-cover"
+                                      />
+                                    ))}
+                                  {swatchItem.images.length > 3 && (
+                                    <div className="w-10 h-10 rounded border bg-muted flex items-center justify-center text-xs text-muted-foreground">
+                                      +{swatchItem.images.length - 3}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             <div className="flex gap-2">
-                              <Button asChild size="sm" variant="outline" className="flex-1">
-                                <Link href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/update`}>
+                              <Button
+                                asChild
+                                size="sm"
+                                variant="outline"
+                                className="flex-1"
+                              >
+                                <Link
+                                  href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/update`}
+                                >
                                   <EditIcon className="h-3 w-3 mr-1" />
                                   Edit
                                 </Link>
                               </Button>
                               <Button asChild size="sm" variant="destructive">
-                                <Link href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/delete`}>
+                                <Link
+                                  href={`/admin/products/${productPost.id}/swatches/${swatchItem.id}/delete`}
+                                >
                                   <TrashIcon className="h-3 w-3" />
                                 </Link>
                               </Button>
@@ -393,7 +458,7 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                         />
                       ))}
                     </div>
-                    <span className="text-sm font-medium">
+                    <span className=" font-medium">
                       {averageRating.toFixed(1)}
                     </span>
                     <span className="text-xs text-muted-foreground">
@@ -405,7 +470,7 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                   <label className="text-xs font-medium text-muted-foreground  tracking-wide">
                     Created
                   </label>
-                  <p className="text-sm font-medium mt-1">
+                  <p className=" font-medium mt-1">
                     {productPost.createdAt.toLocaleDateString()}
                   </p>
                 </div>
@@ -413,14 +478,13 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                   <label className="text-xs font-medium text-muted-foreground  tracking-wide">
                     Updated
                   </label>
-                  <p className="text-sm font-medium mt-1">
+                  <p className=" font-medium mt-1">
                     {productPost.updatedAt.toLocaleDateString()}
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
-
 
           {/* Performance Metrics */}
           <Card>
@@ -431,7 +495,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="text-center p-4 rounded-lg border">
                   <Eye className="mx-auto mb-2" />
-                  <div className="text-2xl font-bold">{interactionStats.views}</div>
+                  <div className="text-2xl font-bold">
+                    {interactionStats.views}
+                  </div>
                   <div className="text-xs font-medium">Views</div>
                 </div>
                 <div className="text-center p-4 rounded-lg border">
@@ -441,12 +507,16 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                 </div>
                 <div className="text-center p-4 rounded-lg border">
                   <ShoppingBagIcon className="mx-auto mb-2" />
-                  <div className="text-2xl font-bold">{interactionStats.addToCart}</div>
+                  <div className="text-2xl font-bold">
+                    {interactionStats.addToCart}
+                  </div>
                   <div className="text-xs font-medium">Cart Adds</div>
                 </div>
                 <div className="text-center p-4 rounded-lg border">
                   <TrendingUp className="mx-auto mb-2" />
-                  <div className="text-2xl font-bold">{interactionStats.total}</div>
+                  <div className="text-2xl font-bold">
+                    {interactionStats.total}
+                  </div>
                   <div className="text-xs font-medium">Total</div>
                 </div>
               </div>
@@ -467,7 +537,10 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                   <CardContent>
                     <div className="space-y-2">
                       {productPost.featuredInBillboard.map((billboard) => (
-                        <div key={billboard.id} className="flex items-center gap-2 p-2 rounded text-sm">
+                        <div
+                          key={billboard.id}
+                          className="flex items-center gap-2 p-2 rounded "
+                        >
                           <Award className="h-4 w-4" />
                           <span className="font-medium">{billboard.label}</span>
                         </div>
@@ -487,9 +560,19 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <h4 className="font-semibold">{productPost.promotion.label}</h4>
-                      <p className="text-sm">{productPost.promotion.description}</p>
-                      <Badge className={productPost.promotion.active ? "bg-green-600" : "bg-gray-600"}>
+                      <h4 className="font-semibold">
+                        {productPost.promotion.label}
+                      </h4>
+                      <p className="">
+                        {productPost.promotion.description}
+                      </p>
+                      <Badge
+                        className={
+                          productPost.promotion.active
+                            ? "bg-green-600"
+                            : "bg-gray-600"
+                        }
+                      >
                         {productPost.promotion.active ? "Active" : "Inactive"}
                       </Badge>
                     </div>
@@ -516,21 +599,30 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                 <TabsContent value="description" className="mt-6">
                   <div className="prose prose-sm max-w-none dark:prose-invert">
                     <BlockNoteRender
-                      initialContent={productPost.description || "No description available"}
+                      initialContent={
+                        productPost.description || "No description available"
+                      }
                     />
                   </div>
                 </TabsContent>
 
                 <TabsContent value="features" className="mt-6">
                   <div className="prose prose-sm max-w-none dark:prose-invert">
-                    <BlockNoteRender initialContent={productPost.features || "No features listed"} />
+                    <BlockNoteRender
+                      initialContent={
+                        productPost.features || "No features listed"
+                      }
+                    />
                   </div>
                 </TabsContent>
 
                 <TabsContent value="specifications" className="mt-6">
                   <div className="prose prose-sm max-w-none dark:prose-invert">
                     <BlockNoteRender
-                      initialContent={productPost.specifications || "No specifications available"}
+                      initialContent={
+                        productPost.specifications ||
+                        "No specifications available"
+                      }
                     />
                   </div>
                 </TabsContent>
@@ -538,7 +630,9 @@ const ProductIdRoutePage = async ({ params }: { params: Params }) => {
                 <TabsContent value="content" className="mt-6">
                   <div className="prose prose-sm max-w-none dark:prose-invert">
                     <BlockNoteRender
-                      initialContent={productPost.content || "No additional content"}
+                      initialContent={
+                        productPost.content || "No additional content"
+                      }
                     />
                   </div>
                 </TabsContent>

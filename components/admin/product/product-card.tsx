@@ -111,20 +111,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 <DropdownMenuItem asChild>
                   <Link href={`/admin/products/${product.id}`}>
                     <EyeIcon  />
-                    View Product
+                    View 
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link href={`/admin/products/${product.id}/update`}>
                     <EditIcon  />
-                    Edit Product
+                    Update
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="text-red-600">
+                <DropdownMenuItem asChild variant="destructive" >
                   <Link href={`/admin/products/${product.id}/delete`}>
                     <TrashIcon />
-                    Delete Product
+                    Delete 
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -224,11 +224,6 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button asChild className="flex-1">
             <Link href={`/admin/products/${product.id}`}>View Details</Link>
           </Button>
-          {isFeatured && (
-            <Button variant="outline" size="sm" className="px-2">
-              <Award className="h-4 w-4" />
-            </Button>
-          )}
         </div>
       </CardFooter>
     </Card>
