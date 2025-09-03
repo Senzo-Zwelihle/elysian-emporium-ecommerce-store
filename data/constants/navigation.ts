@@ -3,7 +3,7 @@ export const navigationMenuItems = [
   { title: "Shop", href: "/" },
   { title: "Brands", href: "/" },
   { title: "Categories", href: "/" },
-  { title: "Account", href: "/" },
+  { title: "Account", href: "/account" },
   { title: "Orders", href: "/" },
 ];
 

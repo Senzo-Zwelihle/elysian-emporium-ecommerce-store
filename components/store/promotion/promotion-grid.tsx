@@ -21,7 +21,7 @@ const PromotionGrid = ({ promotions }: PromotionGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 overflow-hidden px-5 lg:pb-5 pb-2">
+    <div className="grid grid-cols-12 gap-4 overflow-hidden  lg:pb-5 pb-2">
       {promotions.map((promotion, index) => {
         let colSpanClass = "sm:col-span-6 col-span-12";
         if (index === 0) {

@@ -541,7 +541,7 @@ const CreateProductForm = ({
               <UploadDropzone
                 endpoint="productImageUploader"
                 onClientUploadComplete={(res) => {
-                  const urls = res.map((file) => file.url);
+                  const urls = res.map((file) => file.ufsUrl);
                   field.onChange([...(field.value || []), ...urls]);
                   toast.success("Images uploaded successfully!");
                 }}

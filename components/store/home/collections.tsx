@@ -23,6 +23,7 @@ async function fetchCollections(): Promise<Collection[]> {
 }
 
 const Collections = async () => {
+  noStore();
   const collections: Collection[] = await fetchCollections();
 
   //   console.log("Rendering collections:", collections.length);

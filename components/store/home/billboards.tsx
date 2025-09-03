@@ -9,7 +9,7 @@ import { fetchActiveBillboards } from "@/app/api/store/billboard";
 
 async function fetchBillboards(): Promise<Billboard[]> {
   noStore();
-  console.log("Fetching billboards...");
+  // console.log("Fetching billboards...");
   try {
     const billboards = await fetchActiveBillboards();
     return billboards;
@@ -19,6 +19,7 @@ async function fetchBillboards(): Promise<Billboard[]> {
 }
 
 const Billboards = async () => {
+   noStore();
   const billboards = await fetchBillboards();
 
   if (billboards.length === 0) {
