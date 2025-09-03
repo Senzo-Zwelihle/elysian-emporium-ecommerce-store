@@ -1,6 +1,8 @@
+import "server-only";
+
 import { prisma } from "@/lib/prisma/client";
 import { Billboard } from "@/types/store/billboard";
-import { toast } from "sonner";
+
 
 export async function fetchActiveBillboards(): Promise<Billboard[]> {
   try {
@@ -48,7 +50,7 @@ export async function fetchActiveBillboards(): Promise<Billboard[]> {
 
     return transformedBillboards;
   } catch (error) {
-    toast.error("Error fetching active billboards:");
+    // toast.error("Error fetching active billboards:");
     return [];
   }
 }

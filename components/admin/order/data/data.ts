@@ -1,9 +1,6 @@
 import {
   ArrowDownIcon,
-  ArrowRightIcon,
-  ArrowUpIcon,
   CheckCircleIcon,
-  CircleIcon,
   ClockIcon,
   CreditCardIcon,
   DollarSignIcon,

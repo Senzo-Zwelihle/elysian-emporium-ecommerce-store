@@ -1,3 +1,5 @@
+import "server-only";
+
 import { prisma } from "@/lib/prisma/client";
 import { Promotion } from "@/types/store/promotion";
 

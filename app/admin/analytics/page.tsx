@@ -126,56 +126,29 @@ const AnalyticsPage = async () => {
       `Dashboard error: ${error instanceof Error ? error.message : String(error)}`
     );
 
-    // Fallback data in case of major errors
-    const fallbackData = {
-      stats: {
-        totalUsers: 0,
-        totalOrders: 0,
-        totalProducts: 0,
-        totalRevenue: 0,
-        userGrowth: 0,
-        orderGrowth: 0,
-        revenueGrowth: 0,
-      },
-      monthlyRevenue: [],
-      orderStatus: [],
-      topProducts: [],
-      recentOrders: [],
-      categoryPerformance: [],
-      users: { users: [], total: 0, totalPages: 0 },
-      orders: { orders: [], total: 0, totalPages: 0 },
-      products: { products: [], total: 0, totalPages: 0 },
-      inventoryStats: {
-        lowStockCount: 0,
-        outOfStockCount: 0,
-        totalProducts: 0,
-        averageStock: 0,
-        stockByWarehouse: [{ name: "", _count: { products: 0 } }],
-      },
-    };
-  }
-  return (
-    <Container
-      size={"2xl"}
-      alignment={"none"}
-      height={"screen"}
-      padding={"px-md"}
-      gap={"none"}
-      flow={"none"}
-      id="analytics"
-     
-    >
-      <Heading
-        font={"aeonikBold"}
-        size={"md"}
-        spacing={"normal"}
-        lineHeight={"none"}
-        margin={"none"}
+    // Return fallback UI in case of major errors
+    return (
+      <Container
+        size={"2xl"}
+        alignment={"none"}
+        height={"screen"}
+        padding={"px-md"}
+        gap={"none"}
+        flow={"none"}
+        id="analytics"
       >
-        Analytics
-      </Heading>
-    </Container>
-  );
+        <Heading
+          font={"aeonikBold"}
+          size={"md"}
+          spacing={"normal"}
+          lineHeight={"none"}
+          margin={"none"}
+        >
+          Analytics - Error Loading Data
+        </Heading>
+      </Container>
+    );
+  }
 };
 
 export default AnalyticsPage;

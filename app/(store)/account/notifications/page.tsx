@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition, useCallback } from "react";
+import Image from "next/image";
 import {
   BellDotIcon,
   CheckCircle2Icon,
@@ -405,19 +406,23 @@ const NotificationsPage = () => {
                           </CardTitle>
 
                           {n.image && (
-                            <img
+                            <Image
                               src={n.image}
                               alt="Notification image"
+                              width={96}
+                              height={96}
                               className="h-24 w-24 object-cover rounded-md mt-2"
                             />
                           )}
                           {n.images && n.images.length > 0 && (
                             <div className="flex gap-2 mt-2 overflow-x-auto">
                               {n.images.map((imgSrc, index) => (
-                                <img
+                                <Image
                                   key={index}
                                   src={imgSrc}
                                   alt={`Notification image ${index + 1}`}
+                                  width={64}
+                                  height={64}
                                   className="h-16 w-16 object-cover rounded-md"
                                 />
                               ))}

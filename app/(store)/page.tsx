@@ -1,8 +1,8 @@
 import React from "react";
-import Hero from "@/components/store/home/hero";
 import Billboards from "@/components/store/home/billboards";
 import Collections from "@/components/store/home/collections";
 import Promotions from "@/components/store/home/promotions";
+import FeaturedProducts from "@/components/store/home/featured-products";
 
 const Store = () => {
   return (
@@ -11,6 +11,7 @@ const Store = () => {
       <Billboards/>
       <Collections/>
       <Promotions/>
+      <FeaturedProducts/>
     </div>
   );
 };

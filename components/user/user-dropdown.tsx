@@ -7,7 +7,6 @@ import {
   CrownIcon,
   Layers2Icon,
   LogOutIcon,
-  PinIcon,
   UserPenIcon,
 } from "lucide-react";
 

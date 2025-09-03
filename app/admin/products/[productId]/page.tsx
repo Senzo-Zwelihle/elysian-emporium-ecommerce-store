@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import {
   ArrowLeftIcon,
-  CalendarIcon,
   EditIcon,
   PackageIcon,
   StarIcon,
@@ -14,7 +13,6 @@ import {
   TrendingUp,
   Award,
   Eye,
-  ShoppingCart,
   ShoppingBagIcon,
 } from "lucide-react";
 

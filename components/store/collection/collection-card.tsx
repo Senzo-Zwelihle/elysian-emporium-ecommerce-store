@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "motion/react";
 
 import { Badge } from "@/components/ui/badge";
@@ -23,9 +24,11 @@ const CollectionCard = ({ collection }: CollectionCardProps) => {
         <div className="space-y-3">
           {/* Collection Image */}
           <div className="relative w-48 h-48 mx-auto">
-            <img
+            <Image
               src={collection.image}
               alt={collection.label}
+              width={192}
+              height={192}
               className="w-full h-full object-cover rounded-full"
             />
 

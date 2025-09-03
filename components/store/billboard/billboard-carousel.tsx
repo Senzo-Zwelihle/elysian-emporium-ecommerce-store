@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ChevronLeftIcon,
@@ -188,9 +189,11 @@ const BillboardCarousel = ({
                       <div className="flex items-center gap-4">
                         <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-white/60 dark:bg-black/60">
                           {currentBillboard.featuredProduct.images?.[0] ? (
-                            <img
+                            <Image
                               src={currentBillboard.featuredProduct.images[0]}
                               alt={currentBillboard.featuredProduct.name}
+                              width={64}
+                              height={64}
                               className="w-full h-full object-cover"
                             />
                           ) : (

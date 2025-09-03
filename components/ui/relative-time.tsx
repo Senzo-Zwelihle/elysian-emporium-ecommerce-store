@@ -135,7 +135,6 @@ export const RelativeTimeZoneDisplay = ({
 };
 export type RelativeTimeZoneDateProps = HTMLAttributes<HTMLDivElement>;
 export const RelativeTimeZoneDate = ({
-  className,
   ...props
 }: RelativeTimeZoneDateProps) => {
   const { time, dateFormatOptions } = useContext(RelativeTimeContext);
