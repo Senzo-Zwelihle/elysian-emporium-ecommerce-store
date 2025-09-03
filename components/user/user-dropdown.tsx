@@ -4,6 +4,7 @@ import React from "react";
 import {
   BoltIcon,
   BookOpenIcon,
+  CrownIcon,
   Layers2Icon,
   LogOutIcon,
   PinIcon,
@@ -23,6 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { useSignOut } from "@/hooks/use-sign-out";
+import Link from "next/link";
 
 interface UserDropdownProps {
   name: string;
@@ -63,18 +65,18 @@ const UserDropdown = ({ email, name, image }: UserDropdownProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Help</span>
+            <Link href={"/help"}>Help</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <PinIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 4</span>
+            <CrownIcon size={16} className="opacity-60" aria-hidden="true" />
+            <Link href={"/membership"}>Membership</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <UserPenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Profile</span>
+            <Link href={"/account/profile"}>Profile</Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

@@ -63,7 +63,7 @@ const Navigationbar = async () => {
   }
   return (
     <header>
-      <nav className="fixed mt-4 z-20 w-full px-4 md:px-6 lg:px-6">
+      <nav className="fixed mt-4 z-40 w-full px-4 md:px-6 lg:px-6">
         <div className="bg-background/50  rounded-2xl border backdrop-blur-lg px-4">
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
             <div className="flex w-full justify-between lg:w-auto">
