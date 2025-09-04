@@ -1,9 +1,34 @@
 import React from "react";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { Container } from "@/components/ui/container";
-import { Heading } from "@/components/ui/heading";
 
-const AdminDashboardPage = () => {
+import { CalendarWidget, TimeZoneWidget } from "@/components/admin/dashboard-widgets";
+import { DashboardTables } from "@/components/admin/dashboard-tables";
+
+import ProfileCard from "@/components/account/profile-card";
+
+import { auth } from "@/lib/auth";
+
+import { fetchAllProducts, fetchAllOrders, fetchAllUsers } from "@/app/api/admin/dashboard";
+
+const AdminDashboardPage = async () => {
+  noStore();
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/sign-in");
+  
+  const [productsData, ordersData, usersData] = await Promise.all([
+    fetchAllProducts(1, 5),
+    fetchAllOrders(1, 5),
+    fetchAllUsers(1, 5),
+  ]);
+  
+  const recentProducts = productsData.products;
+  const recentOrders = ordersData.orders;
+  const recentUsers = usersData.users;
+  
   return (
     <Container
       size={"2xl"}
@@ -13,17 +38,36 @@ const AdminDashboardPage = () => {
       gap={"none"}
       flow={"none"}
       id="admin-dashboard"
-      className="my-4"
+      className="my-4 space-y-6"
     >
-      <Heading
-        font={"aeonik"}
-        size={"md"}
-        spacing={"normal"}
-        lineHeight={"none"}
-        margin={"none"}
-      >
-        Admin
-      </Heading>
+      {/* header */}
+      <ProfileCard
+        name={
+          session.user.name && session.user.name.length > 0
+            ? session.user.name
+            : session.user.email.split("@")[0]
+        }
+        email={session.user.email}
+        emailVerified={session.user.emailVerified}
+        image={
+          session.user.image ??
+          `https://avatar.vercel.sh/${session.user.email}`
+        }
+        role={session.user.role ?? "user"}
+      />
+
+      {/* Dashboard widgets */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <CalendarWidget />
+        <TimeZoneWidget />
+      </div>
+
+      {/* Recent Activity Tables */}
+      <DashboardTables 
+        products={recentProducts}
+        orders={recentOrders}
+        users={recentUsers}
+      />
     </Container>
   );
 };

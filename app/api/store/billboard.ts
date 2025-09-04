@@ -49,7 +49,7 @@ export async function fetchActiveBillboards(): Promise<Billboard[]> {
     }));
 
     return transformedBillboards;
-  } catch (error) {
+  } catch {
     // toast.error("Error fetching active billboards:");
     return [];
   }

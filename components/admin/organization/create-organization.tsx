@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import slugify from "slugify";
@@ -34,7 +34,6 @@ const CreateOrganizationForm = () => {
   // Form states
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const [newBenefitInput, setNewBenefitInput] = useState("");
   //   Form Zod validation.
   const form = useForm<OrganizationSchemaType>({
     resolver: zodResolver(organizationSchema),

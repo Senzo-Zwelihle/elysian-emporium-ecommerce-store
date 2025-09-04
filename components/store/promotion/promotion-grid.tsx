@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 import { MoveUpRight } from "lucide-react";
 import { Promotion } from "@/types/store/promotion";
 import { Badge } from "@/components/ui/badge";
@@ -41,30 +42,34 @@ const PromotionGrid = ({ promotions }: PromotionGridProps) => {
             whileInView={{ y: 0, opacity: 1 }}
             transition={{ ease: "easeOut" }}
             viewport={{ once: false }}
-            className={`relative ${colSpanClass}`}
+            className={`relative ${colSpanClass} group cursor-pointer`}
+            whileHover={{ scale: 1.02 }}
           >
-            <div className="w-auto h-full">
-              <Image
-                src={promotion.image}
-                alt={promotion.label}
-                height={600}
-                width={1200}
-                className="h-full w-full object-cover rounded-xl"
-              />
-            </div>
-            <div className="absolute lg:bottom-2 bottom-0 text-black w-full p-4 flex justify-between items-center">
-              <div>
-                <h3 className="lg:text-xl text-sm bg-black text-white rounded-xl p-2 px-4">
-                  {promotion.label}
-                </h3>
-                <Badge className="mt-1">
-                  {promotion.brand.name}
-                </Badge>
+            <Link href={`/promotions/${promotion.id}`} className="block h-full">
+              <div className="w-auto h-full relative overflow-hidden rounded-xl">
+                <Image
+                  src={promotion.image}
+                  alt={promotion.label}
+                  height={600}
+                  width={1200}
+                  className="h-full w-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </div>
-              <div className="lg:w-12 w-10 lg:h-12 h-10 text-white grid place-content-center rounded-full bg-black">
-                <MoveUpRight />
+              <div className="absolute lg:bottom-2 bottom-0 text-black w-full p-4 flex justify-between items-center">
+                <div>
+                  <h3 className="lg:text-xl text-sm bg-black text-white rounded-xl p-2 px-4 transition-transform duration-300 group-hover:scale-105">
+                    {promotion.label}
+                  </h3>
+                  <Badge className="mt-1 transition-transform duration-300 group-hover:scale-105">
+                    {promotion.brand.name}
+                  </Badge>
+                </div>
+                <div className="lg:w-12 w-10 lg:h-12 h-10 text-white grid place-content-center rounded-full bg-black transition-all duration-300 group-hover:bg-primary group-hover:scale-110">
+                  <MoveUpRight className="transition-transform duration-300 group-hover:rotate-12" />
+                </div>
               </div>
-            </div>
+            </Link>
           </motion.article>
         );
       })}

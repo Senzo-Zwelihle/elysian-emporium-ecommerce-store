@@ -3,7 +3,7 @@ import {
   CheckCircleIcon,
   ClockIcon,
   CreditCardIcon,
-  DollarSignIcon,
+  HandCoinsIcon,
   PackageIcon,
   TruckIcon,
   XCircleIcon,
@@ -100,7 +100,7 @@ export const paymentMethods = [
   {
     value: "cashondelivery",
     label: "Cash on Delivery",
-    icon: DollarSignIcon,
+    icon: HandCoinsIcon,
   },
   {
     value: "mastercard",

@@ -106,7 +106,7 @@ export function FavoriteItemCard({
       exit="exit"
       className="flex items-center gap-4 rounded-lg border p-4 shadow-sm transition-shadow duration-200 hover:shadow-md md:gap-6"
     >
-      <Link href={`/products/${item.id}`} className="flex-shrink-0">
+      <Link href={`/product/${item.id}`} className="flex-shrink-0">
         <div className="relative h-24 w-24 rounded-md sm:h-32 sm:w-32">
           <Image
             className="rounded-md object-cover"
@@ -119,7 +119,7 @@ export function FavoriteItemCard({
       </Link>
 
       <div className="flex flex-grow flex-col justify-between py-1">
-        <Link href={`/products/${item.id}`} className="block">
+        <Link href={`/product/${item.id}`} className="block">
           <h3 className="mb-1 text-base font-semibold transition-colors duration-200 hover:text-primary md:text-lg">
             {item.name}
           </h3>

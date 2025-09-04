@@ -5,8 +5,8 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 import { auth } from "@/lib/auth";
-
 import { prisma } from "@/lib/prisma/client";
+import { awardReviewPointsAction } from "./order";
 
 export async function createNewReviewAction(
   productId: string,
@@ -17,16 +17,12 @@ export async function createNewReviewAction(
   if (!session) {
     return {
       success: false,
-      message: "Authentication required to favorite items.",
-      isFavorited: false,
+      message: "Authentication required."
     };
   }
 
   const user = session.user.id;
-
-  if (!user) {
-    return redirect("/");
-  }
+  if (!user) return redirect("/");
 
   if (!productId || !rating || !comment) {
     throw new Error(
@@ -49,6 +45,17 @@ export async function createNewReviewAction(
   }
 
   try {
+    const existingReview = await prisma.review.findUnique({
+      where: {
+        productId_userId: {
+          productId,
+          userId: user,
+        },
+      },
+    });
+
+    const isNewReview = !existingReview;
+
     await prisma.review.upsert({
       where: {
         productId_userId: {
@@ -69,8 +76,20 @@ export async function createNewReviewAction(
       },
     });
 
+    // Award points only for new reviews
+    let pointsMessage = "";
+    if (isNewReview) {
+      const pointsResult = await awardReviewPointsAction(user, productId);
+      if (pointsResult.success && 'message' in pointsResult) {
+        pointsMessage = ` ${pointsResult.message}`;
+      }
+    }
+
     revalidatePath(`/product/${productId}`);
-    return { success: true, message: "Review submitted successfully!" };
+    return { 
+      success: true, 
+      message: `Review ${isNewReview ? 'submitted' : 'updated'} successfully!${pointsMessage}` 
+    };
   } catch (error) {
     console.error("Error creating/updating review:", error);
     throw new Error("Failed to submit review. Please try again.");
@@ -86,16 +105,12 @@ export async function updateReviewAction(
   if (!session) {
     return {
       success: false,
-      message: "Authentication required to favorite items.",
-      isFavorited: false,
+      message: "Authentication required."
     };
   }
 
   const user = session.user.id;
-
-  if (!user) {
-    return redirect("/");
-  }
+  if (!user) return redirect("/");
 
   if (!reviewId || !rating || !comment) {
     throw new Error("Missing required fields.");
@@ -152,16 +167,12 @@ export async function deleteReviewAction(reviewId: string) {
   if (!session) {
     return {
       success: false,
-      message: "Authentication required to favorite items.",
-      isFavorited: false,
+      message: "Authentication required."
     };
   }
 
   const user = session.user.id;
-
-  if (!user) {
-    return redirect("/");
-  }
+  if (!user) return redirect("/");
 
   if (!reviewId) {
     throw new Error("Review ID is required.");
@@ -222,18 +233,11 @@ export async function getReviewsForProduct(productId: string) {
 export async function getUserReviewForProduct(productId: string) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
-    return {
-      success: false,
-      message: "Authentication required to favorite items.",
-      isFavorited: false,
-    };
+    return null;
   }
 
   const user = session.user.id;
-
-  if (!user) {
-    return null;
-  }
+  if (!user) return null;
 
   try {
     const review = await prisma.review.findUnique({

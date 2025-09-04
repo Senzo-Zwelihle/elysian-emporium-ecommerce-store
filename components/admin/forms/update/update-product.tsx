@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -108,10 +108,6 @@ const UpdateProductForm = ({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   //   block note states
-  const [descriptionContent, setDescriptionContent] = useState("");
-  const [featuresContent, setFeaturesContent] = useState("");
-  const [contentContent, setContentContent] = useState("");
-  const [specificationContent, setSpecificationContent] = useState("");
   //   call server action to submit form
   const form = useForm<ProductSchemaType>({
     resolver: zodResolver(productSchema),
@@ -442,10 +438,7 @@ const UpdateProductForm = ({
               <FormLabel>Description</FormLabel>
               <BlockNoteEditor
                 initialContent={field.value}
-                onChange={(val) => {
-                  setDescriptionContent(val);
-                  field.onChange(val);
-                }}
+                onChange={field.onChange}
               />
               <FormMessage />
             </FormItem>
@@ -460,10 +453,7 @@ const UpdateProductForm = ({
               <FormLabel>Features</FormLabel>
               <BlockNoteEditor
                 initialContent={field.value}
-                onChange={(val) => {
-                  setFeaturesContent(val);
-                  field.onChange(val);
-                }}
+                onChange={field.onChange}
               />
               <FormMessage />
             </FormItem>
@@ -478,10 +468,7 @@ const UpdateProductForm = ({
               <FormLabel>Specifications</FormLabel>
               <BlockNoteEditor
                 initialContent={field.value}
-                onChange={(val) => {
-                  setSpecificationContent(val);
-                  field.onChange(val);
-                }}
+                onChange={field.onChange}
               />
               <FormMessage />
             </FormItem>
@@ -496,10 +483,7 @@ const UpdateProductForm = ({
               <FormLabel>Content</FormLabel>
               <BlockNoteEditor
                 initialContent={field.value}
-                onChange={(val) => {
-                  setContentContent(val);
-                  field.onChange(val);
-                }}
+                onChange={field.onChange}
               />
               <FormMessage />
             </FormItem>

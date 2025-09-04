@@ -66,7 +66,7 @@ interface UsersTableProps {
 
 export default function UsersTable({ users: initialUsers }: UsersTableProps) {
   const [users, setUsers] = useState<User[]>(initialUsers);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const [banModalUserId, setBanModalUserId] = useState<string | null>(null);
 

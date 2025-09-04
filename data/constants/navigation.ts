@@ -1,17 +1,17 @@
 export const navigationMenuItems = [
   { title: "Home", href: "/" },
-  { title: "Shop", href: "/" },
-  { title: "Brands", href: "/" },
-  { title: "Categories", href: "/" },
+  { title: "Shop", href: "/products" },
+  { title: "Brands", href: "/brands" },
+  { title: "Categories", href: "/categories" },
   { title: "Account", href: "/account" },
   { title: "Orders", href: "/" },
 ];
 
 export const mobileNavigationMenuItems = [
   { title: "Home", href: "/" },
-  { title: "Shop", href: "/" },
-  { title: "Brands", href: "/" },
-  { title: "Categories", href: "/" },
+  { title: "Shop", href: "/products" },
+  { title: "Brands", href: "/brands" },
+  { title: "Categories", href: "/categories" },
   { title: "Cart", href: "/" },
   { title: "Orders", href: "/" },
   { title: "Favorites", href: "/" },
@@ -31,19 +31,19 @@ export const footerNavigationItems = [
       { title: "Promotions", href: "/promotions" },
     ],
   },
-  {
-    group: "Customer Service",
-    items: [
-      { title: "Help Center", href: "/help" },
-      { title: "Shipping & Delivery", href: "/shipping" },
-    ],
-  },
-  {
-    group: "Company",
-    items: [
-      { title: "About Us", href: "/about" },
-      { title: "Partners", href: "/partners" },
-    ],
-  }
+  // {
+  //   group: "Customer Service",
+  //   items: [
+  //     { title: "Help Center", href: "/help" },
+  //     { title: "Shipping & Delivery", href: "/shipping" },
+  //   ],
+  // },
+  // {
+  //   group: "Company",
+  //   items: [
+  //     { title: "About Us", href: "/about" },
+  //     { title: "Partners", href: "/partners" },
+  //   ],
+  // }
   
 ];

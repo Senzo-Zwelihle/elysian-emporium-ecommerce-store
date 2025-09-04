@@ -20,7 +20,6 @@ interface CartItemsListProps {
 
 const ShoppingCartItemList = ({
   items,
-  showCheckout = true,
 }: CartItemsListProps) => {
   const router = useRouter();
 

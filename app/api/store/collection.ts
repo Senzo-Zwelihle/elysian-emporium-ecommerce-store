@@ -46,7 +46,7 @@ export async function fetchActiveCollections(): Promise<Collection[]> {
 
     
     return transformedCollections;
-  } catch (error) {
+  } catch {
     
     return [];
   }

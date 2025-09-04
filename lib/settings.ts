@@ -30,7 +30,7 @@ export async function getSystemSettings(): Promise<AdminSettingsSchemaType> {
       twoFactorAuth: settings.twoFactorAuth,
       loginAttemptLimit: settings.loginAttemptLimit,
     };
-  } catch (error) {
+  } catch {
     return {
       siteName: "Elysian Emporium",
       siteDescription: "A modern ecommerce platform",

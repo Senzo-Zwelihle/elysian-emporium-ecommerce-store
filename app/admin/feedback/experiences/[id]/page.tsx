@@ -37,7 +37,7 @@ async function fetchExperience(id: string) {
     }
 
     return experience;
-  } catch (error) {
+  } catch {
     toast.error("Error fetching experience:");
     return notFound();
   }

@@ -52,7 +52,6 @@ interface OrganizationInvitationsProps {
 
 const OrganizationInvitations = ({
   invitations,
-  currentUserId,
 }: OrganizationInvitationsProps) => {
   const [isAccepting, setIsAccepting] = useState(false);
   const [isRejecting, setIsRejecting] = useState(false);
@@ -72,7 +71,7 @@ const OrganizationInvitations = ({
         // Handle error
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to accept invitation");
     } finally {
       setIsAccepting(false);
@@ -92,7 +91,7 @@ const OrganizationInvitations = ({
         // Handle error
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to reject invitation");
     } finally {
       setIsRejecting(false);

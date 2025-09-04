@@ -9,3 +9,13 @@ export function formatPrice(price: string | Decimal | number) {
     currency: "ZAR",
   }).format(numericPrice);
 }
+
+export const dateFormat = (date: Date) => {
+  return new Intl.DateTimeFormat("en-ZA", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(date));
+};

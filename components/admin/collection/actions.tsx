@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -26,7 +25,6 @@ export function CollectionRowActions<TData extends Collection>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const collectionId = row.original.id;
-  const router = useRouter();
 
   return (
     <DropdownMenu>

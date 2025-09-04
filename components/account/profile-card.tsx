@@ -17,7 +17,6 @@ interface ProfileCardProps {
 
 const ProfileCard = ({
   name,
-  email,
   emailVerified,
   image,
   role,

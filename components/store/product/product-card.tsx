@@ -18,7 +18,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
-
 import {
   formatPrice,
   Product,
@@ -71,7 +70,7 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                       className="object-cover transition-transform duration-300"
                       sizes="(max-width: 768px) 100vw, 320px"
                     />
-                    
+
                     {/* Gradient Overlay */}
                     <motion.div
                       className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
@@ -90,7 +89,11 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                         initial={{ opacity: 0, scale: 0.8, x: -20 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 20,
+                        }}
                       >
                         <Badge className="shadow-lg rounded-full py-1">
                           <ZapIcon className="h-3 w-3 mr-1" />
@@ -98,7 +101,7 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                         </Badge>
                       </motion.div>
                     )}
-                    
+
                     <motion.div
                       initial={{ opacity: 0, scale: 0.8, x: -20 }}
                       animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -147,7 +150,7 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                       </h3>
                     </Link>
                   </motion.div>
-                  
+
                   {/* SKU */}
                   <motion.div
                     className="text-xs text-muted-foreground"
@@ -203,7 +206,9 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                       {productFormattedPrice}
                     </span>
                     {productStockStatus.label && (
-                      <Badge className={`${productStockStatus.color} text-white`}>
+                      <Badge
+                        className={`${productStockStatus.color} text-white`}
+                      >
                         {productStockStatus.label}
                       </Badge>
                     )}
@@ -232,41 +237,38 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
                   transition={{ duration: 0.3, delay: 0.7 }}
                 >
                   <Link href={`/product/${product.id}`} className="w-full">
-                      {productStockStatus.isAvailable ? (
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full"
-                        >
-                          <Button
-                            size="lg"
-                            className="w-full"
-                          >
-                            <EyeIcon className="h-4 w-4 mr-2" />
-                            View Product
-                          </Button>
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          className="w-full"
-                        >
-                          <Button disabled className="w-full">
-                            {product.status === "comingsoon" ? (
-                              <>
-                                <ClockIcon className="h-4 w-4 mr-2" />
-                                Coming Soon
-                              </>
-                            ) : (
-                              <>
-                                <PackageIcon className="h-4 w-4 mr-2" />
-                                Out of Stock
-                              </>
-                            )}
-                          </Button>
-                        </motion.div>
-                      )}
+                    {productStockStatus.isAvailable ? (
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full"
+                      >
+                        <Button size="lg" className="w-full">
+                          <EyeIcon className="h-4 w-4 mr-2" />
+                          View Product
+                        </Button>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full"
+                      >
+                        <Button disabled className="w-full">
+                          {product.status === "comingsoon" ? (
+                            <>
+                              <ClockIcon className="h-4 w-4 mr-2" />
+                              Coming Soon
+                            </>
+                          ) : (
+                            <>
+                              <PackageIcon className="h-4 w-4 mr-2" />
+                              Out of Stock
+                            </>
+                          )}
+                        </Button>
+                      </motion.div>
+                    )}
                   </Link>
                 </motion.div>
               </div>
@@ -467,7 +469,7 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.5 }}
           >
-            <span className="text-2xl font-bold text-primary">
+            <span className="text-2xl font-bold">
               {productFormattedPrice}
             </span>
             {productStockStatus.label && (
@@ -487,7 +489,7 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
             <div className="flex items-center gap-1">
               <EyeIcon className="h-4 w-4" />
               <span>{loading ? "..." : viewCount}</span>
-              <span>views</span>
+              <span>view(s)</span>
             </div>
             <div className="flex items-center gap-1">
               <ShareIcon className="h-4 w-4" />
@@ -505,41 +507,37 @@ const ProductCard = ({ product, viewMode = "grid" }: ProductCardProps) => {
           >
             {/* Action buttons row */}
             <Link href={`/product/${product.id}`} className="w-full">
-                {productStockStatus.isAvailable ? (
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full"
-                  >
-                    <Button
-                      size="lg"
-                      className="w-full"
-                    >
-                      <EyeIcon className="h-4 w-4 mr-2" />
-                      View Product
-                    </Button>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full"
-                  >
-                    <Button disabled className="w-full">
-                      {product.status === "comingsoon" ? (
-                        <>
-                          <ClockIcon className="h-4 w-4 mr-2" />
-                          Coming Soon
-                        </>
-                      ) : (
-                        <>
-                          <PackageIcon className="h-4 w-4 mr-2" />
-                          Out of Stock
-                        </>
-                      )}
-                    </Button>
-                  </motion.div>
-                )}
+              {productStockStatus.isAvailable ? (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full"
+                >
+                  <Button size="lg" className="w-full">
+                    View
+                  </Button>
+                </motion.div>
+              ) : (
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full"
+                >
+                  <Button disabled className="w-full">
+                    {product.status === "comingsoon" ? (
+                      <>
+                        <ClockIcon className="h-4 w-4 mr-2" />
+                        Coming Soon
+                      </>
+                    ) : (
+                      <>
+                        <PackageIcon className="h-4 w-4 mr-2" />
+                        Out of Stock
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+              )}
             </Link>
           </motion.div>
         </CardFooter>

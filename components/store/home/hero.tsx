@@ -89,7 +89,7 @@ const Hero = () => {
                     icon={ShoppingBagIcon}
                     iconPlacement="left"
                   >
-                    <Link href="#link">
+                    <Link href="#featured-products">
                       <span className="text-nowrap">Start Shopping</span>
                     </Link>
                   </Button>
@@ -103,7 +103,7 @@ const Hero = () => {
                   icon={SparklesIcon}
                   iconPlacement="right"
                 >
-                  <Link href="#link">
+                  <Link href="#promotions">
                     <span className="text-nowrap">Promotions</span>
                   </Link>
                 </Button>

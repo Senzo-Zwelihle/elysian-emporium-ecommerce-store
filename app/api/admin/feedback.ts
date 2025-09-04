@@ -42,7 +42,7 @@ export async function fetchAllReviews() {
     });
 
     return reviews;
-  } catch (error) {
+  } catch {
     return [];
   }
 }
@@ -73,7 +73,7 @@ export async function fetchAllExperiences() {
     });
 
     return experiences;
-  } catch (error) {
+  } catch {
     return [];
   }
 }

@@ -23,7 +23,7 @@ const ProductContainer = ({
   showFilters = false,
 }: ProductContainerProps) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => {

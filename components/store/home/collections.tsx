@@ -16,7 +16,7 @@ async function fetchCollections(): Promise<Collection[]> {
     // console.log("Fetched collections:", collections.length);
     // console.log("Collections data:", JSON.stringify(collections, null, 2));
     return collections;
-  } catch (error) {
+  } catch {
     // console.error("Error fetching collections:", error);
     return [];
   }

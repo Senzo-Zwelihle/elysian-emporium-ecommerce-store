@@ -80,7 +80,7 @@ const ManageMembers = ({
         // Handle error
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to update member role");
     } finally {
       setIsUpdating(false);
@@ -98,7 +98,7 @@ const ManageMembers = ({
         // Handle error
         toast.error(result.message);
       }
-    } catch (error) {
+    } catch {
       toast.error("Failed to remove member, please try again.");
     } finally {
       setIsRemoving(false);

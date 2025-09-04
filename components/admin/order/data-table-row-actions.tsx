@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Row } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Package, CreditCard, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,10 +11,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { orderSchema } from "@/components/admin/order/data/schema";
+import UpdateOrderStatusForm from "@/components/admin/forms/update/update-order-status";
+import UpdatePaymentStatusForm from "@/components/admin/forms/update/update-payment-status";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,34 +31,74 @@ export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
   const order = orderSchema.parse(row.original);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+
+  const copyOrderId = () => {
+    navigator.clipboard.writeText(order.id);
+  };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="data-[state=open]:bg-muted size-8"
-        >
-          <MoreHorizontal />
-          <span className="sr-only">Open menu</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>
-          <Link href={`/admin/orders/${order.id}`}>View Details</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>Copy Order ID</DropdownMenuItem>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="data-[state=open]:bg-muted size-8"
+          >
+            <MoreHorizontal />
+            <span className="sr-only">Open menu</span>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-[180px]">
+          <DropdownMenuItem asChild>
+            <Link href={`/admin/orders/${order.id}`}>
+              <Eye className="w-4 h-4" />
+              View Details
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={copyOrderId}>
+            Copy Order ID
+          </DropdownMenuItem>
 
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <Link href={`/admin/orders/${order.id}/update`}>Edit Order</Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href={`/admin/orders/${order.id}/delete`}>Delete Order</Link>
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => setStatusDialogOpen(true)}>
+            <Package className="w-4 h-4" />
+            Update Status
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setPaymentDialogOpen(true)}>
+            <CreditCard className="w-4 h-4" />
+            Update Payment
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Order Status</DialogTitle>
+          </DialogHeader>
+          <UpdateOrderStatusForm
+            orderId={order.id}
+            currentStatus={order.status}
+            onSuccess={() => setStatusDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Payment Status</DialogTitle>
+          </DialogHeader>
+          <UpdatePaymentStatusForm
+            orderId={order.id}
+            currentPaymentStatus={order.paymentStatus}
+            onSuccess={() => setPaymentDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

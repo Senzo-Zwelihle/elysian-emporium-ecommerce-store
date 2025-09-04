@@ -8,6 +8,9 @@ import { ProductServer, serializeProducts } from "@/types/store/product";
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import ProductContainer from "../product/product-container";
+import { Button } from "@/components/ui/button";
+import { SparklesIcon } from "@/components/icons/sparkles";
+import Link from "next/link";
 
 async function fetchFeaturedProducts(): Promise<ProductServer[]> {
   const products = await prisma.product.findMany({
@@ -73,7 +76,7 @@ const FeaturedProducts = async () => {
       gap={"none"}
       flow={"none"}
       id="featured-products"
-      className=""
+      className="space-y-8"
     >
       {/* header */}
       <Heading
@@ -86,7 +89,21 @@ const FeaturedProducts = async () => {
         Featured
       </Heading>
       {/* main */}
-      <ProductContainer initialProducts={products} />
+
+      <div className="mb-8">
+        <ProductContainer initialProducts={products} />
+      </div>
+
+      {/* footer */}
+
+      <Button
+        effect="expandIcon"
+        icon={SparklesIcon}
+        iconPlacement="left"
+        size={"lg"}
+      >
+        <Link href={"/products"}>Browse all</Link>
+      </Button>
     </Container>
   );
 };

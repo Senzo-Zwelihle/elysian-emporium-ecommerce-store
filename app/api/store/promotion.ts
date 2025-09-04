@@ -30,7 +30,7 @@ export async function fetchActivePromotions(): Promise<Promotion[]> {
     }));
 
     return transformedPromotions;
-  } catch (error) {
+  } catch {
     return [];
   }
 }

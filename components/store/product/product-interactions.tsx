@@ -32,7 +32,7 @@ export function ProductInteractions({ productId, productName }: ProductInteracti
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <EyeIcon className="h-4 w-4 text-muted-foreground" />
-                <span>Views</span>
+                <span>View(s)</span>
               </div>
               <div className="h-4 w-8 bg-muted rounded animate-pulse"></div>
             </div>

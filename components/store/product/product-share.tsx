@@ -39,7 +39,6 @@ export function ProductShare({
   productId,
   productName,
   productUrl,
-  productImage,
 }: ProductShareProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -62,7 +61,7 @@ export function ProductShare({
           description: "error" in result ? result.error : "Unknown error",
         });
       }
-    } catch (error) {
+    } catch {
       toast.error("Error sharing product", {
         description: "Failed to share the product. Please try again.",
       });

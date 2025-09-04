@@ -66,7 +66,7 @@ export function MembershipCard({ membershipInfo }: MembershipCardProps) {
           description: "You're already enrolled in our membership program.",
         });
       }
-    } catch (error) {
+    } catch {
       toast("Error", {
         description: "Failed to sign up for membership. Please try again.",
       });

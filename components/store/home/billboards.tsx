@@ -13,7 +13,7 @@ async function fetchBillboards(): Promise<Billboard[]> {
   try {
     const billboards = await fetchActiveBillboards();
     return billboards;
-  } catch (error) {
+  } catch {
     return [];
   }
 }

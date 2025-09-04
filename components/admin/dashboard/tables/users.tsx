@@ -2,11 +2,8 @@
 
 import React from "react";
 import {
-  CrownIcon,
   DownloadIcon,
   SearchIcon,
-  ShieldIcon,
-  UserIcon,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -51,13 +48,7 @@ interface UsersTableProps {
 }
 
 
-const roleIcons = {
-  guest: UserIcon,
-  user: UserIcon,
-  administrator: ShieldIcon,
-  owner: CrownIcon,
-  member: UserIcon,
-};
+
 
 const UsersTable = ({
   users,
@@ -112,8 +103,6 @@ const UsersTable = ({
             </TableHeader>
             <TableBody>
               {users.map((user) => {
-                const RoleIcon =
-                  roleIcons[user.role as keyof typeof roleIcons] || UserIcon;
                 return (
                   <TableRow key={user.id}>
                     <TableCell>

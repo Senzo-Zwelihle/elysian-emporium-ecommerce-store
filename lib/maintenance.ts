@@ -7,7 +7,7 @@ export async function isMaintenanceModeEnabled(): Promise<boolean> {
     });
     
     return maintenance?.enabled ?? false;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -19,7 +19,7 @@ export async function getMaintenanceMessage(): Promise<string> {
     });
     
     return maintenance?.message ?? "We are currently performing scheduled maintenance. Please check back soon.";
-  } catch (error) {
+  } catch {
     return "We are currently performing scheduled maintenance. Please check back soon.";
   }
 }
