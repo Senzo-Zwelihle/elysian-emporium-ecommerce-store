@@ -19,7 +19,7 @@ async function fetchBillboards(): Promise<Billboard[]> {
 }
 
 const Billboards = async () => {
-   noStore();
+  noStore();
   const billboards = await fetchBillboards();
 
   if (billboards.length === 0) {

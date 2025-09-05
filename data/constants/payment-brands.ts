@@ -1,0 +1,51 @@
+export const paymentBrandsItems = [
+  {
+    src: "/assets/svg/payment/capitecpay.svg",
+    alt: "Capitec Pay Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/mastercard.svg",
+    alt: "Mastercard Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/ozow.svg",
+    alt: "Ozow Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/payfast.svg",
+    alt: "Payfast Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/payflex.svg",
+    alt: "Payflex Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/paypal.svg",
+    alt: "Paypal Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+  {
+    src: "/assets/svg/payment/snapscan.svg",
+    alt: "Snap Scan Logo",
+    height: 8,
+    width: 8,
+    className: "h-8",
+  },
+];

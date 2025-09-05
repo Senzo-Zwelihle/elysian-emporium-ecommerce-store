@@ -3,18 +3,18 @@ import Billboards from "@/components/store/home/billboards";
 import Collections from "@/components/store/home/collections";
 import Promotions from "@/components/store/home/promotions";
 import FeaturedProducts from "@/components/store/home/featured-products";
+import PaymentBrands from "@/components/store/home/payment-brands";
 
 
 
 const Store = () => {
   return (
     <div className="space-y-40 mb-40 overflow-hidden">
-      {/* <Hero /> */}
       <Billboards />
+      <FeaturedProducts />
       <Collections />
       <Promotions />
-      <FeaturedProducts />
-      
+      <PaymentBrands />
     </div>
   );
 };

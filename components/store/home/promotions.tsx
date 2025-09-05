@@ -18,7 +18,7 @@ async function fetchPromotions(): Promise<Promotion[]> {
 
 const Promotions = async () => {
   const promotions = await fetchPromotions();
-console.log(promotions)
+// console.log(promotions)
   if (promotions.length === 0) {
     return (
       <div className="w-full h-96 rounded-xl flex items-center justify-center">
