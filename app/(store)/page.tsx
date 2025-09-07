@@ -21,6 +21,3 @@ const Store = () => {
 
 export default Store;
 
-// TODO: CLean up project
-// TODO: Create search drawer component
-// TODO: Unit tests

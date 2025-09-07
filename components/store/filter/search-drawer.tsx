@@ -2,10 +2,8 @@
 
 import React from "react";
 
-
-
 const SearchDrawer = () => {
-  return <div>SearchDrawer</div>;
+  return <></>;
 };
 
 export default SearchDrawer;
