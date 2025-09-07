@@ -4,7 +4,7 @@
 
 A modern, feature-rich ecommerce platform built with Next.js 15, TypeScript, and Prisma.
 
-deployement: https://elysian-emporium-ecommerce-store.vercel.app/
+Deployment: https://elysian-emporium-ecommerce-store.vercel.app/
 
 ## Overview
 
