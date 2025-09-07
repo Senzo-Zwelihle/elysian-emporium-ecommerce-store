@@ -39,7 +39,7 @@ export async function deleteAccountAction(
     });
 
     return { status: "success", message: "Account deleted successfully." };
-  } catch (error) {
+  } catch {
     return {
       status: "error",
       message: "Failed to delete account. Please try again.",

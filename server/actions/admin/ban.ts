@@ -1,7 +1,6 @@
 "use server";
 
 import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma/client";
@@ -68,7 +67,7 @@ export async function checkExpiredBansAction(): Promise<ApiResponse> {
       status: "success", 
       message: `Unbanned ${unbannedUsers.length} users with expired bans` 
     };
-  } catch (error) {
+  } catch {
     return { status: "error", message: "Failed to check expired bans" };
   }
 }

@@ -47,7 +47,7 @@ export async function updateMaintenanceModeAction(
       status: "success", 
       message: `Maintenance mode ${result.data.enabled ? "enabled" : "disabled"}` 
     };
-  } catch (error) {
+  } catch {
     return { 
       status: "error", 
       message: "Failed to update maintenance mode" 
@@ -65,7 +65,7 @@ export async function getMaintenanceModeAction(): Promise<{ enabled: boolean; me
       enabled: maintenance?.enabled ?? false,
       message: maintenance?.message ?? undefined,
     };
-  } catch (error) {
+  } catch {
     return { enabled: false };
   }
 }

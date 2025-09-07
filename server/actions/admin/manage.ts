@@ -59,7 +59,7 @@ export async function banUserAction(
     );
 
     return { status: "success", message: "User banned successfully" };
-  } catch (error) {
+  } catch {
     return { status: "error", message: "Failed to ban user" };
   }
 }
@@ -95,7 +95,7 @@ export async function unbanUserAction(userId: string): Promise<ApiResponse> {
     );
 
     return { status: "success", message: "User unbanned successfully" };
-  } catch (error) {
+  } catch {
     return { status: "error", message: "Failed to unban user" };
   }
 }
@@ -126,7 +126,7 @@ export async function deleteUserAction(userId: string): Promise<ApiResponse> {
     );
 
     return { status: "success", message: "User deleted successfully" };
-  } catch (error) {
+  } catch {
     return { status: "error", message: "Failed to delete user" };
   }
 }

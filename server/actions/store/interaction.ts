@@ -76,7 +76,7 @@ export async function getProductViewCount(productId: string) {
 }
 
 // Track product share - only once per user per platform
-export async function trackProductShare(productId: string, platform: string) {
+export async function trackProductShare(productId: string) {
   try {
     const session = await auth.api.getSession({ headers: await headers() });
 

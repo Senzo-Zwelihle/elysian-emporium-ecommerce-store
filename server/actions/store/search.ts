@@ -8,7 +8,7 @@ export interface SearchProduct {
   id: string;
   name: string;
   slug: string;
-  price: any; 
+  price: number; 
   images: string[];
   rating: number;
   reviewCount: number;
@@ -66,7 +66,7 @@ export async function searchProducts(
       id: product.id,
       name: product.name,
       slug: product.slug,
-      price: product.price,
+      price: Number(product.price),
       images: product.images,
       rating: parseFloat(averageRating.toFixed(1)),
       reviewCount: reviewCount,

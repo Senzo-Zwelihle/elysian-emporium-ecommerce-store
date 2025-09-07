@@ -75,7 +75,7 @@ export type GetAdminOrdersResponse = {
   page?: number;
   perPage?: number;
   error?: string;
-  issues?: any[]; 
+  issues?: unknown[]; 
 };
 
 // Type for the data returned by 

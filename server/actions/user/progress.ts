@@ -51,7 +51,6 @@ export async function getUserMembershipProgress() {
       : null;
 
   // Calculate the progress percentage
-  const pointsToNextTier = nextTier ? nextTier.minPoints - user.points : 0;
   const pointsInCurrentTier = user.points - user.membership.minPoints;
   const totalPointsForNextTier = nextTier
     ? nextTier.minPoints - user.membership.minPoints

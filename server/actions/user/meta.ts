@@ -10,7 +10,7 @@ import {
 
 export const MembershipActionMeta: Record<
   string,
-  { label: string; icon: any }
+  { label: string; icon: React.ComponentType }
 > = {
   welcome_bonus: { label: "Welcome Bonus", icon: GiftIcon },
   shopping: { label: "Shopping", icon: ShoppingBagIcon },

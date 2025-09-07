@@ -40,7 +40,7 @@ export async function addNewItemToCartAction(
   }
 
   try {
-    let cart: ShoppingCartType | null = await redisShoppingCart.get(
+    const cart: ShoppingCartType | null = await redisShoppingCart.get(
       `cart-${user}`
     );
 
@@ -70,7 +70,7 @@ export async function addNewItemToCartAction(
       };
     }
 
-    let myCart: ShoppingCartType = { userId: user, items: [] };
+    const myCart: ShoppingCartType = { userId: user, items: [] };
 
     if (cart && cart.items) {
       myCart.items = [...cart.items];
@@ -112,11 +112,11 @@ export async function addNewItemToCartAction(
     revalidatePath(`/products/${selectedProduct.id}`);
 
     return { success: true, message: "Product added to cart successfully!" };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Server Action Error (addNewItemToCartAction):", error);
     return {
       success: false,
-      message: error.message || "An unexpected error occurred.",
+      message: error instanceof Error ? error.message : "An unexpected error occurred.",
     };
   }
 }
@@ -149,7 +149,7 @@ export async function deleteItemFromCartAction(
   }
 
   try {
-    let cart: ShoppingCartType | null = await redisShoppingCart.get(
+    const cart: ShoppingCartType | null = await redisShoppingCart.get(
       `cart-${user}`
     );
 

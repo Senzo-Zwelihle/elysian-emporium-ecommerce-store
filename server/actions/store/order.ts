@@ -147,7 +147,7 @@ export async function validateCartItemsAction(
       validatedItems: validationResults,
       totals,
     };
-  } catch (error) {
+  } catch {
     toast.error("Cart validation failed");
     return {
       success: false,
@@ -247,7 +247,7 @@ export async function createOrderAction(
 
       // Award points for the order
       const pointsToAward = calculateOrderPoints(Number(serverCalculatedTotals.totalAmount));
-      await awardPoints(user, pointsToAward, `Order #${newOrder.orderNumber}`, tx as any);
+      await awardPoints(user, pointsToAward, `Order #${newOrder.orderNumber}`, tx as Parameters<typeof awardPoints>[3]);
 
       return {
         ...newOrder,
@@ -271,7 +271,7 @@ export async function createOrderAction(
         paymentMethod: order.paymentMethod,
       },
     };
-  } catch (error) {
+  } catch {
     toast.error("Failed to create order");
     return {
       success: false,
@@ -329,7 +329,7 @@ export async function updateOrderStatusAction(
       success: true,
       order: updatedOrder,
     };
-  } catch (error) {
+  } catch {
     toast.error("Failed to update order status");
     return {
       success: false,
@@ -388,7 +388,7 @@ export async function updatePaymentStatusAction(
       success: true,
       order: updatedOrder,
     };
-  } catch (error) {
+  } catch {
     toast.error("Failed to update payment status");
     return {
       success: false,
@@ -435,7 +435,7 @@ export async function getUserOrdersAction() {
       success: true,
       orders,
     };
-  } catch (error) {
+  } catch {
     toast.error("Failed to fetch orders");
     return {
       success: false,
@@ -516,7 +516,7 @@ export async function getOrderDetailsAction(
       success: true,
       order: processedOrder,
     };
-  } catch (error) {
+  } catch {
     toast.error("Failed to fetch order details");
     return {
       success: false,
@@ -547,7 +547,7 @@ export async function awardReviewPointsAction(userId: string, productId: string)
     } else {
       return result;
     }
-  } catch (error) {
+  } catch {
     toast.error("Failed to award points");
     return {
       success: false,

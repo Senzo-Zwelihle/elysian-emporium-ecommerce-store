@@ -35,7 +35,7 @@ export async function updateProfileAction(
 
     try {
       revalidatePath("/account");
-    } catch (e) {}
+    } catch {}
 
     await createNotificationAction(
       "Profile updated successfully",

@@ -36,7 +36,7 @@ export async function updateSettingsAction(
     try {
       revalidatePath("/account/settings");
       revalidatePath("/account");
-    } catch (e) {}
+    } catch {}
 
     await createNotificationAction(
       "Settings updated successfully",

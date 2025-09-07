@@ -2,7 +2,7 @@
 
 import { unstable_noStore as noStore } from "next/cache";
 
-import { Category, ProductTag } from "@/lib/generated/prisma";
+import { ProductTag } from "@/lib/generated/prisma";
 
 import { prisma } from "@/lib/prisma/client";
 
@@ -15,7 +15,7 @@ export async function fetchProducts(
 
   const { search, category, minPrice, maxPrice, sortBy, tag, brand } = params;
 
-  const where: any = {};
+  const where: Record<string, any> = {};
 
   if (search) {
     where.OR = [
@@ -50,7 +50,7 @@ export async function fetchProducts(
     };
   }
 
-  let orderBy: any = { createdAt: "desc" };
+  let orderBy: Record<string, any> = { createdAt: "desc" };
 
   if (sortBy) {
     switch (sortBy) {

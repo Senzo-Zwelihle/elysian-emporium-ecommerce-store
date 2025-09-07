@@ -44,7 +44,7 @@ export function ProductShare({
 
   const handleShare = async (platform: string) => {
     try {
-      const result = await trackProductShare(productId, platform);
+      const result = await trackProductShare(productId);
       if (result.success) {
         if (result.pointsAwarded) {
           toast.success(`Shared on ${platform}!`, {

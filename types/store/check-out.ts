@@ -1,5 +1,4 @@
 import {
-  ShoppingCart,
   MapPin,
   CreditCard,
   CheckCircle,
@@ -20,7 +19,7 @@ export interface Address {
   isDefault: boolean;
   label: string;
   userId: string;
-  type: any;
+  type: string;
   createdAt: Date;
   updatedAt: Date;
 }
