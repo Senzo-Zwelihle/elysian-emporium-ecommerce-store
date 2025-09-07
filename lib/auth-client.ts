@@ -5,5 +5,5 @@ import { organizationClient } from "better-auth/client/plugins";
 
 export const authClient = createAuthClient({
   plugins: [emailOTPClient(), adminClient(), organizationClient()],
-  baseURL: "http://localhost:3000",
+  baseURL: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
 });
