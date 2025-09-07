@@ -4,6 +4,8 @@
 
 A modern, feature-rich ecommerce platform built with Next.js 15, TypeScript, and Prisma.
 
+deployement: https://elysian-emporium-ecommerce-store.vercel.app/
+
 ## Overview
 
 Elysian Emporium is a full-featured ecommerce store with advanced admin capabilities, membership tiers, product management, order processing, and much more. Built with cutting-edge technologies for optimal performance and user experience.
